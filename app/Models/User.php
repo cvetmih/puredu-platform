@@ -40,5 +40,36 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_signed_in' => 'datetime'
     ];
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function getAmountSpentAttribute()
+    {
+        return $this->orders->where('status', '=', 'paid')->sum('price');
+    }
+
+    public function getEnrollmentsCountAttribute()
+    {
+        return $this->courses->count();
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
 }

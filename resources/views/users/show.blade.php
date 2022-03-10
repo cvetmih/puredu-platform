@@ -126,6 +126,7 @@
                             class="px-6 py-4 flex gap-4 justify-between bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== $user->activities->count()) border-b border-gray-800 @endif">
                             <div>{{ $activity->course->title }}</div>
                             <div>[{{ $activity->lesson->icon }}] {{ $activity->lesson->title }}</div>
+                            <div>{{ $activity->type }}</div>
                             <div>{{ $activity->created_at }}</div>
                         </div>
                     @endforeach

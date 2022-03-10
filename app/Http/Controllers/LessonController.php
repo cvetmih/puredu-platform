@@ -18,6 +18,7 @@ class LessonController extends Controller
     public function __construct()
     {
         $courses = Course::all()->pluck('title', 'id');
+        $chapters = Chapter::all()->pluck('title', 'id');
 
         $this->inputs = [
             'title' => [
@@ -56,6 +57,12 @@ class LessonController extends Controller
                 'required' => true,
                 'options' => $courses
             ],
+            'chapter_id' => [
+                'label' => 'Chapter',
+                'type' => 'select',
+                'required' => true,
+                'options' => $chapters
+            ],
         ];
     }
 
@@ -86,6 +93,7 @@ class LessonController extends Controller
             'image_id' => 'required',
             'video_id' => 'required',
             'course_id' => 'required',
+            'chapter_id' => 'required',
         ]);
 
         $lesson = Lesson::create([
@@ -96,6 +104,7 @@ class LessonController extends Controller
             'image_id' => $request->input('image_id'),
             'video_id' => $request->input('video_id'),
             'course_id' => $request->input('course_id'),
+            'chapter_id' => $request->input('chapter_id'),
         ]);
 
         return redirect()->to(route('lessons.show', $lesson))->with([
@@ -105,7 +114,10 @@ class LessonController extends Controller
 
     public function show(Lesson $lesson)
     {
-        return view('lessons.show')->with(compact('lesson'));
+//        return view('lessons.show')->with(compact('lesson'));
+        return view('lessons.show')->with([
+            'lesson' => $lesson
+        ]);
     }
 
     public function edit(Lesson $lesson)

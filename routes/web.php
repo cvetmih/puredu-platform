@@ -97,5 +97,48 @@ Route::group(['prefix' => 'orders', 'middleware' => 'auth'], function () {
     Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
+Route::get('test', function () {
+    $models = [
+        'Activity',
+        'Chapter',
+        'Course',
+        'Image',
+        'Lesson',
+        'Order',
+        'Payment',
+        'User',
+        'Video',
+    ];
 
+    $excluded_methods = [
+        'factory',
+        'newFactory',
+
+        // User model
+        'tokens',
+        'tokenCan',
+        'createToken',
+        'currentAccessToken',
+        'withAccessToken',
+        'notifications',
+        'readNotifications',
+        'unreadNotifications',
+        'notify',
+        'notifyNow',
+        'routeNotificationFor'
+    ];
+
+    foreach ($models as $model) {
+        echo "<h2>$model</h2>";
+
+        foreach ((new ReflectionClass("\App\Models\\$model"))->getMethods() as $method) {
+            $is_non_vendor = strpos($method->class, 'App\Models') !== false;
+            $is_not_excluded = !in_array($method->name, $excluded_methods);
+
+            if ($is_non_vendor && $is_not_excluded) {
+                echo '$' . strtolower($model) . '->' . $method->name . '();<br>';
+            }
+        }
+    }
+});
 require __DIR__ . '/auth.php';

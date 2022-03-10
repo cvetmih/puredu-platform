@@ -18,7 +18,7 @@
                 <a href="{{ route('users.show', $user) }}"
                    class="px-6 py-4 grid grid-cols-6 bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== count($users)) border-b border-gray-800 @endif">
                     <div>{{ $user->name }}</div>
-                    <div>${{ $user->amount_spent }}</div>
+                    <div>{{ format_money($user->amount_spent) }}</div>
 {{--                    <div>{{ $user->email }}</div>--}}
                     <div>{{ $user->enrollments_count }}</div>
                     <div>{{ $user->created_at->format('M d, Y') }}</div>

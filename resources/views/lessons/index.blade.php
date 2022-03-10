@@ -1,29 +1,23 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Lessons
-        </h2>
-    </x-slot>
-
     <x-container>
-        <div class="grid grid-cols-4 font-bold">
-            <div>Title</div>
-            <div>Type</div>
-            <div>Course</div>
-            <div>Created at</div>
-        </div>
-        @foreach($lessons as $lesson)
-            <a href="{{ route('lessons.show', $lesson) }}" class="grid grid-cols-4">
-                <div>{{ $lesson->title }}</div>
-                <div>{{ $lesson->type }}</div>
-                <div>{{ $lesson->course->title }}</div>
-                <div>{{ $lesson->created_at }}</div>
-            </a>
-        @endforeach
+        <x-page-header title="Lessons">
+            <x-button href="{{ route('lessons.create') }}" size="big">Create a new lesson</x-button>
+        </x-page-header>
 
-        <div class="mt-4">
-            <a href="{{ route('lessons.create') }}" class="bg-gray-200 py-2 px-4 border-2 border-gray-300">Create
-                new</a>
+        <div class="flex flex-col gap-8">
+            @foreach($chapters as $chapter)
+                <x-box-with-header header="{{ $chapter->title }}">
+                    @foreach($chapter->lessons as $lesson)
+                        <a href="{{ route('lessons.show', $lesson) }}"
+                           class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4 flex items-center justify-between">
+                            <div>{{ $lesson->title }}</div>
+                            <div>{{ $lesson->type }}</div>
+                            {{--                            <div>{{ $lesson->course->title }}</div>--}}
+                            <div>{{ $lesson->created_at }}</div>
+                        </a>
+                    @endforeach
+                </x-box-with-header>
+            @endforeach
         </div>
     </x-container>
 </x-app-layout>

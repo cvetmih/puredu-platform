@@ -1,62 +1,17 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Edit {{ $course->name }}
-        </h2>
-    </x-slot>
-
     <x-container>
+        <x-page-header title="Edit: {{ $course->title }}"
+                       back="Back to {{ $course->title }}"
+                       backlink="{{ route('courses.show', $course) }}"
+        />
 
-        <form action="{{ route('courses.update', $course) }}"
-              class="bg-white p-8 max-w-3xl m-auto flex flex-col gap-4"
-              method="post"
+        <x-form action="{{ route('courses.update', $course) }}"
+                method="post"
+                :inputs="$inputs"
+                :data="$course"
+                submit="Save course"
         >
             {{ method_field('PUT') }}
-            {{ csrf_field() }}
-
-            @if($errors->any())
-                <div role="alert">
-                    <div class="border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            @endif
-
-            @foreach($inputs as $name => $attr)
-                <div>
-                    @if($attr['type'] === 'text' || $attr['type'] === 'password')
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ $name }}">
-                            {{ $attr['label'] }}
-                        </label>
-                        <input
-                            class="shadow appearance-none border @error($name) border-red-500 @enderror rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="{{ $name }}" name="{{ $name }}" type="{{ $attr['type'] }}" placeholder=""
-                            value="{{ old($name, $attr['type'] !== 'password' ? $course->{$name} : '') }}">
-                    @elseif($attr['type'] === 'checkbox')
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ $name }}">
-                            <input type="checkbox" id="{{ $name }}" name="{{ $name }}">
-                            {{ $attr['label'] }}
-                        </label>
-                    @endif
-                </div>
-            @endforeach
-
-
-            <div class="flex items-center justify-between">
-                <a class="inline-flex font-bold text-sm text-blue-500 hover:text-blue-800"
-                   href="{{ route('courses.show', $course) }}">
-                    Go back
-                </a>
-                <button
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit">
-                    Update
-                </button>
-            </div>
-        </form>
+        </x-form>
     </x-container>
 </x-app-layout>

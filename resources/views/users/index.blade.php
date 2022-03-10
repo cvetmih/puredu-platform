@@ -1,12 +1,8 @@
 <x-app-layout>
     <x-container>
-
-        <div class="flex items-center justify-between mb-4">
-            <h1 class="text-3xl font-bold mb-4">Users</h1>
-            <a href="{{ route('users.create') }}"
-               class="inline-flex bg-gradient-to-br from-primary to-secondary py-3 px-6 rounded-full font-bold">Create
-                new</a>
-        </div>
+        <x-page-header title="Users">
+            <x-button href="{{ route('users.create') }}" size="big">Create a new user</x-button>
+        </x-page-header>
 
         <x-box>
             <div class="px-6 pb-4 grid grid-cols-6 font-bold">

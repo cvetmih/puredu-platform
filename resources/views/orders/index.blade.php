@@ -1,31 +1,28 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Orders
-        </h2>
-    </x-slot>
-
     <x-container>
-        <div class="grid grid-cols-5 font-bold">
-            <div>User</div>
-            <div>Course</div>
-            <div>Price</div>
-            <div>Status</div>
-            <div>Created at</div>
-        </div>
-        @foreach($orders as $order)
-            <a href="{{ route('orders.show', $order) }}" class="grid grid-cols-5">
-                <div>{{ $order->user->name }}</div>
-                <div>{{ $order->course->title }}</div>
-                <div>{{ $order->price }}</div>
-                <div>{{ $order->status }}</div>
-                <div>{{ $order->created_at }}</div>
-            </a>
-        @endforeach
+        <x-page-header title="Orders">
+            <x-button href="{{ route('orders.create') }}" size="big">Create a new order</x-button>
+        </x-page-header>
 
-        <div class="mt-4">
-            <a href="{{ route('orders.create') }}" class="bg-gray-200 py-2 px-4 border-2 border-gray-300">Create
-                new</a>
-        </div>
+        <x-box>
+            <div class="px-6 pb-4 grid grid-cols-5 font-bold border-b-2 border-gray-600">
+                <div>User</div>
+                <div>Course</div>
+                <div>Price</div>
+                <div>Status</div>
+                <div>Created at</div>
+            </div>
+            @foreach($orders as $key => $order)
+                <a href="{{ route('orders.show', $order) }}"
+                   class="px-6 py-4 grid grid-cols-5 bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== count($orders)) border-b border-gray-800 @endif"
+                >
+                    <div>{{ $order->user->name }}</div>
+                    <div>{{ $order->course->title }}</div>
+                    <div>{{ $order->price }}</div>
+                    <div>{{ $order->status }}</div>
+                    <div>{{ $order->created_at }}</div>
+                </a>
+            @endforeach
+        </x-box>
     </x-container>
 </x-app-layout>

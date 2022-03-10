@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
+use App\Models\Course;
 use App\Models\Lesson;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -15,6 +17,8 @@ class LessonController extends Controller
 
     public function __construct()
     {
+        $courses = Course::all()->pluck('title', 'id');
+
         $this->inputs = [
             'title' => [
                 'label' => 'Title',
@@ -28,7 +32,7 @@ class LessonController extends Controller
             ],
             'description' => [
                 'label' => 'Description',
-                'type' => 'text',
+                'type' => 'textarea',
                 'required' => true
             ],
             'type' => [
@@ -47,9 +51,10 @@ class LessonController extends Controller
                 'required' => true
             ],
             'course_id' => [
-                'label' => 'Course ID',
-                'type' => 'text',
-                'required' => true
+                'label' => 'Course',
+                'type' => 'select',
+                'required' => true,
+                'options' => $courses
             ],
         ];
     }
@@ -59,8 +64,9 @@ class LessonController extends Controller
      */
     public function index()
     {
-        $lessons = Lesson::with('course')->get();
-        return view('lessons.index')->with(compact('lessons'));
+        $chapters = Chapter::where('course_id', 1)->with('lessons')->get();
+//        $chapters = Lesson::with('chapter', 'course')->get()->groupBy('chapter.id');
+        return view('lessons.index')->with(compact('chapters'));
     }
 
     public function create()

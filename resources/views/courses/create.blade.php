@@ -1,7 +1,8 @@
 <x-app-layout>
 
     <x-container>
-        <h1 class="text-3xl font-bold mb-4">Create new course</h1>
+        <x-page-header title="Create a new course"/>
+
         <x-box class="max-w-3xl mx2-auto ">
             <form action="{{ route('courses.store') }}"
                   class="flex flex-col gap-4"

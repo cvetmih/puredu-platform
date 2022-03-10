@@ -1,29 +1,28 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Payments
-        </h2>
-    </x-slot>
-
     <x-container>
-        <div class="grid grid-cols-4 font-bold">
-            <div>Order</div>
-            <div>User</div>
-            <div>Status</div>
-            <div>Created at</div>
-        </div>
-        @foreach($payments as $payment)
-            <a href="{{ route('payments.show', $payment) }}" class="grid grid-cols-4">
-                <div>{{ $payment->order->id }}</div>
-                <div>{{ $payment->user->name }}</div>
-                <div>{{ $payment->status }}</div>
-                <div>{{ $payment->created_at }}</div>
-                {{--                @dd($payment)--}}
-            </a>
-        @endforeach
+        <x-page-header title="Payments">
+            <x-button href="{{ route('payments.create') }}" size="big">Create a new payment</x-button>
+        </x-page-header>
 
-        <div class="mt-4">
-            <a href="{{ route('payments.create') }}" class="bg-gray-200 py-2 px-4 border-2 border-gray-300">Create new</a>
-        </div>
+        <x-box>
+            <div class="px-6 pb-4 grid grid-cols-4 font-bold border-b-2 border-gray-600">
+            <div>Order</div>
+                <div>User</div>
+                <div>Status</div>
+                <div>Created at</div>
+            </div>
+            @foreach($payments as $key => $payment)
+                <a href="{{ route('payments.show', $payment) }}"
+                   class="px-6 py-4 grid grid-cols-4 bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== count($payments)) border-b border-gray-800 @endif"
+                >
+                    <div>{{ $payment->order->id }}</div>
+                    <div>{{ $payment->user->name }}</div>
+                    <div>{{ $payment->status }}</div>
+                    <div>{{ $payment->created_at }}</div>
+                    {{--                @dd($payment)--}}
+                </a>
+            @endforeach
+
+        </x-box>
     </x-container>
 </x-app-layout>

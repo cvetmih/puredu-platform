@@ -15,6 +15,10 @@ class Lesson extends Model
         return $this->belongsTo(Course::class);
     }
 
+    public function chapter(){
+        return $this->belongsTo(Chapter::class);
+    }
+
     public function image(){
         return $this->belongsTo(Image::class);
     }

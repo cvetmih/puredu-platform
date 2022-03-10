@@ -4,6 +4,7 @@
         'users.index' => 'Users',
         'courses.index' => 'Courses',
         'lessons.index' => 'Lessons',
+        'videos.index' => 'Videos',
         'orders.index' => 'Orders',
         'payments.index' => 'Payments',
     ];

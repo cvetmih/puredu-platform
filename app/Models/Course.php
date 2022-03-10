@@ -20,6 +20,11 @@ class Course extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class);
+    }
+
     public function lessons()
     {
         return $this->hasMany(Lesson::class);

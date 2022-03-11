@@ -5,7 +5,7 @@
         </x-page-header>
 
         <x-box>
-            <div class="px-6 pb-4 grid grid-cols-6 font-bold">
+            <div class="px-6 pb-4 grid grid-cols-6 font-bold border-b-2 border-gray-600">
                 <div>Name</div>
                 <div>Amount spent</div>
 {{--                <div>Email</div>--}}

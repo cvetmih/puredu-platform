@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -15,16 +17,21 @@ class OrderController extends Controller
 
     public function __construct()
     {
+        $users = User::all()->pluck('name', 'id');
+        $courses = Course::all()->pluck('title', 'id');
+
         $this->inputs = [
             'user_id' => [
-                'label' => 'User ID',
-                'type' => 'text',
-                'required' => true
+                'label' => 'User',
+                'type' => 'select',
+                'required' => true,
+                'options' => $users
             ],
             'course_id' => [
                 'label' => 'Course ID',
-                'type' => 'text',
-                'required' => true
+                'type' => 'select',
+                'required' => true,
+                'options' => $courses
             ],
             'price' => [
                 'label' => 'Price',
@@ -33,13 +40,23 @@ class OrderController extends Controller
             ],
             'status' => [
                 'label' => 'Status',
-                'type' => 'text',
-                'required' => true
+                'type' => 'select',
+                'required' => true,
+                'options' => [
+                    'paid' => 'Paid',
+                    'waiting' => 'Waiting',
+                    'error' => 'Error',
+                ]
             ],
             'method' => [
                 'label' => 'Method',
-                'type' => 'text',
-                'required' => true
+                'type' => 'select',
+                'required' => true,
+                'options' => [
+                    'paypal' => 'PayPal',
+                    'card' => 'Card payment',
+                    'bank' => 'Bank transfer',
+                ]
             ],
             'referrer' => [
                 'label' => 'Referrer',

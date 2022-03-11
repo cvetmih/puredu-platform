@@ -9,15 +9,17 @@
         'payments.index' => 'Payments',
     ];
 @endphp
-<nav x-data="{ open: false }" class="flex flex-col bg-gray-900 border-r border-gray-800 py-8 h-screen">
+<nav x-data="{ open: false }" class="flex flex-col gap-8 bg-gray-900 border-r border-gray-800 py-8 h-screen">
     <!-- Primary Navigation Menu -->
 
-    <a href="{{ route('dashboard') }}" class="block mx-16">
-        <x-application-logo class="block h-10 w-auto max-w-full fill-current"/>
-    </a>
+    <div class="pb-8 border-b border-gray-800">
+        <a href="{{ route('dashboard') }}" class="block mx-16">
+            <x-application-logo class="block h-10 w-auto max-w-full fill-current"/>
+        </a>
+    </div>
 
     <!-- Navigation Links -->
-    <div class="my-auto hidden sm:flex flex-col gap-6 justify-start">
+    <div class="flex-1 hidden sm:flex flex-col gap-6 justify-start">
         @foreach($links as $url => $title)
             <x-nav-link :href="route($url)" :active="request()->routeIs($url)">
                 {{ $title }}

@@ -207,10 +207,10 @@
                 </x-box-with-header>
 
                 <div class="flex gap-4">
-                    <x-box-with-header class="flex-1" header="V dashboardu chci videt">
+                    <x-box-with-header class="flex-1" header="Quick links">
                         <ul class="">
                             <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Pocet novych uzivatelu za mesic
+                                Create new coupon
                             </li>
                             <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
                                 Pocet novych enrollmentu za mesic

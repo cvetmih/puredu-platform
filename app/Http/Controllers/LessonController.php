@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Video;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,60 +14,103 @@ use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
+    protected $inputs;
+
     public function __construct()
-    {
-
-    }
-
-    private function getInputs()
     {
         $courses = Course::all()->pluck('title', 'id');
         $chapters = Chapter::all()->pluck('title', 'id');
+        $videos = Video::all()->pluck('title', 'id');
+        $lesson_types = (new Lesson())->types;
 
-        return [
+        $all_types = array_keys($lesson_types);
+
+        $this->inputs = [
             'title' => [
                 'label' => 'Title',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'for_types' => $all_types,
+                'show_in' => ['create', 'edit'],
+                'hidden' => false,
             ],
             'slug' => [
                 'label' => 'Slug',
-                'type' => 'text',
-                'required' => true
+                'type' => 'slug',
+                'slug' => 'title',
+                'required' => true,
+                'for_types' => $all_types,
+                'show_in' => ['create'],
+                'hidden' => true,
             ],
             'description' => [
                 'label' => 'Description',
                 'type' => 'textarea',
-                'required' => true
+                'required' => true,
+                'for_types' => $all_types,
+                'show_in' => ['create', 'edit'],
+                'hidden' => false,
             ],
             'type' => [
                 'label' => 'Type',
-                'type' => 'text',
-                'required' => true
+                'type' => 'select',
+                'required' => true,
+                'options' => $lesson_types,
+                'for_types' => $all_types,
+                'show_in' => ['create'],
+                'hidden' => true,
             ],
             'image_id' => [
                 'label' => 'Image ID',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'for_types' => $all_types,
+                'show_in' => ['create', 'edit'],
+                'hidden' => false,
             ],
             'video_id' => [
-                'label' => 'Video ID',
-                'type' => 'text',
-                'required' => true
+                'label' => 'Video',
+                'type' => 'select',
+                'required' => true,
+                'options' => $videos,
+                'for_types' => ['video'],
+                'show_in' => ['create', 'edit'],
+                'hidden' => false,
             ],
             'course_id' => [
                 'label' => 'Course',
                 'type' => 'select',
                 'required' => true,
-                'options' => $courses
+                'options' => $courses,
+                'for_types' => $all_types,
+                'show_in' => ['create'],
+                'hidden' => false,
             ],
             'chapter_id' => [
                 'label' => 'Chapter',
                 'type' => 'select',
                 'required' => true,
-                'options' => $chapters
+                'options' => $chapters,
+                'for_types' => $all_types,
+                'show_in' => ['create', 'edit'],
+                'hidden' => false,
             ],
         ];
+    }
+
+    private function getInputs($type = 'all', $method = 'create')
+    {
+        if ($type === 'all') return $this->inputs;
+
+        $inputs = [];
+
+        foreach ($this->inputs as $key => $input) {
+            if (in_array($method, $input['show_in']) && in_array($type, $input['for_types'])) {
+                $inputs[$key] = $input;
+            }
+        }
+
+        return $inputs;
     }
 
     /**
@@ -79,10 +123,11 @@ class LessonController extends Controller
         return view('lessons.index')->with(compact('chapters'));
     }
 
-    public function create()
+    public function create($type)
     {
         return view('lessons.create')->with([
-            'inputs' => $this->getInputs()
+            'inputs' => $this->getInputs($type, 'create'),
+            'type' => $type
         ]);
     }
 
@@ -112,9 +157,7 @@ class LessonController extends Controller
 
         notify()->success("Lesson \"$lesson->title\" was created.", 'Success');
 
-        return redirect()->to(route('lessons.show', $lesson))->with([
-            'message' => 'New lesson created.'
-        ]);
+        return redirect()->to(route('lessons.show', $lesson));
     }
 
     public function show(Lesson $lesson)
@@ -126,7 +169,7 @@ class LessonController extends Controller
     {
         return view('lessons.edit')->with([
             'lesson' => $lesson,
-            'inputs' => $this->getInputs()
+            'inputs' => $this->getInputs($lesson->type, 'edit')
         ]);
     }
 
@@ -134,7 +177,6 @@ class LessonController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'slug' => 'required',
             'description' => 'required',
             'type' => 'required',
             'image_id' => 'required',
@@ -144,7 +186,6 @@ class LessonController extends Controller
 
         $lesson->update([
             'title' => $request->input('title'),
-            'slug' => $request->input('slug'),
             'description' => $request->input('description'),
             'type' => $request->input('type'),
             'image_id' => $request->input('image_id'),

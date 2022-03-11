@@ -8,7 +8,7 @@
         <x-form action="{{ route('lessons.store') }}"
                 method="post"
                 :inputs="$inputs"
-                :data="['course_id' => isset($_GET['course']) ? $_GET['course'] : '']"
+                :data="['course_id' => isset($_GET['course']) ? $_GET['course'] : '', 'type' => $type]"
                 submit="Create lesson"
         />
     </x-container>

@@ -4,7 +4,7 @@
     $theme = isset($attributes['theme']) ? $attributes['theme'] : 'primary';
 
     $themeClasses = [
-      'primary' => 'bg-gradient-to-br from-pink-400 to-purple-500 ring-purple-300',
+      'primary' => 'bg-gradient-to-br from-pink-400 to-purple-500 ring-purple-400',
       'secondary' => 'bg-white bg-opacity-10 hover:bg-opacity-20'
       // 'bg-gradient-to-br from-green-400 to-blue-400'
     ];
@@ -19,6 +19,6 @@
     $classes = implode(' ', [$baseClasses, $sizeClasses[$size], $themeClasses[$theme]]);
 @endphp
 
-<{{ $element }} {{ $attributes->merge(['class' => $classes,]) }}>
+<{{ $element }} {{ $attributes->merge(['class' => $classes]) }}>
 {{ $slot }}
 </{{ $element }}>

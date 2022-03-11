@@ -5,7 +5,7 @@
         <div class="flex flex-col gap-4">
             @foreach($inputs as $name => $attr)
                 <div class="flex flex-col gap-2">
-                    @if($attr['type'] !== 'checkbox')
+                    @if($attr['type'] !== 'checkbox' && !$attr['hidden'])
                         <label class="block text-sm text-white text-opacity-70" for="{{ $name }}">
                             {{ $attr['label'] }}
                         </label>
@@ -17,8 +17,20 @@
                             id="{{ $name }}"
                             name="{{ $name }}"
                             type="{{ $attr['type'] }}"
+                            :hidden="$attr['hidden']"
                             placeholder=""
                             value="{{ old($name, $attr['type'] !== 'password' ? isset($data->{$name}) ? $data->{$name} : '' : '') }}"
+                        />
+                    @elseif($attr['type'] === 'slug')
+                        <x-input-slug
+                            class="{{ $errors->has($name) ? 'border-red-500' : '' }}"
+                            slug="{{ $attr['slug'] }}"
+                            id="{{ $name }}"
+                            name="{{ $name }}"
+                            type="{{ $attr['type'] }}"
+                            :hidden="$attr['hidden']"
+                            placeholder=""
+                            value="{{ old($name, isset($data->{$name}) ? $data->{$name} : '') }}"
                         />
                     @elseif($attr['type'] === 'checkbox')
                         <label class="block text-sm text-white text-opacity-70" for="{{ $name }}">
@@ -35,7 +47,7 @@
                                     class="{{ $errors->has($name) ? 'border-red-500' : '' }} h-48"
                         >{{ old($name, isset($data->{$name}) ? $data->{$name} : '') }}</x-textarea>
                     @elseif($attr['type'] === 'select')
-                        <x-select name="{{ $name }}" id="{{ $name }}">
+                        <x-select name="{{ $name }}" id="{{ $name }}" :hidden="$attr['hidden']">
                             @foreach($attr['options'] as $value => $label)
                                 <option value="{{ $value }}"
                                         @if(isset($data->{$name}) && $data->{$name} === $value)

@@ -18,8 +18,10 @@
                 >
                     <div>{{ $order->user->name }}</div>
                     <div>{{ $order->course->title }}</div>
-                    <div>{{ $order->price }}</div>
-                    <div>{{ $order->status }}</div>
+                    <div>{{ format_money($order->price) }}</div>
+                    <div>
+                        <x-tag status="{{ $order->status }}"/>
+                    </div>
                     <div>{{ $order->created_at }}</div>
                 </a>
             @endforeach

@@ -1,7 +1,11 @@
 <x-app-layout>
 
     <x-container>
-        <x-page-header title="Create a new course"/>
+        <x-page-header
+            back="Back to courses"
+            backlink="{{ route('courses.index') }}"
+            title="Create a new course"
+        />
 
         <x-box class="max-w-3xl mx2-auto ">
             <form action="{{ route('courses.store') }}"

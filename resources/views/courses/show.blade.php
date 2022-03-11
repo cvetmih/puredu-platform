@@ -10,19 +10,25 @@
         <div class="flex gap-4 items-start">
             <x-box-with-header header="Lessons" class="flex-1 flex flex-col">
                 <div class="flex items-center justify-between p-4">
-                    <x-button href="{{ route('lessons.create') . '?course=' . $course->id }}">
+                    <x-button-lesson position="left">
                         Add new
-                    </x-button>
+                    </x-button-lesson>
                     <x-button href="#" theme="secondary">Reorder</x-button>
                 </div>
-                <div>
-                    @foreach($course->lessons as $key => $lesson)
-                        <a href="{{ route('lessons.show', $lesson) }}"
-                           class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4 flex items-center justify-between gap-4">
-                            <div>{{ $key + 1 }}</div>
-                            <div class="flex-1">{{ $lesson->title }}</div>
-                            <div class="">[{{ $lesson->type }}]</div>
-                        </a>
+                <div class="flex flex-col gap-4 p-4">
+                    @foreach($course->chapters as $chapterKey => $chapter)
+                        <x-box-with-header header="{{ $chapter->title }}">
+                            @foreach($chapter->lessons as $key => $lesson)
+                                <a href="{{ route('lessons.show', $lesson) }}"
+                                   class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4 flex items-center justify-between gap-4">
+                                    <div>{{ $key + 1 }}</div>
+                                    <div class="flex-1">{{ $lesson->title }}</div>
+                                    <div class="w-5">
+                                        <x-icon icon="{{ $lesson->type }}"/>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </x-box-with-header>
                     @endforeach
                 </div>
             </x-box-with-header>
@@ -40,22 +46,22 @@
 
                             @if($input['type'] === 'text')
                                 <x-input type="text"
-                                       id="{{ $input_name }}"
-                                       name="{{ $input_name }}"
-                                       autocomplete="off"
-                                       value="{{ $course->{$input_name} }}"
-                                       class="{{ $input_class }} block w-full"/>
+                                         id="{{ $input_name }}"
+                                         name="{{ $input_name }}"
+                                         autocomplete="off"
+                                         value="{{ $course->{$input_name} }}"
+                                         class="{{ $input_class }} block w-full"/>
                             @elseif($input['type'] === 'textarea')
                                 <x-textarea id="{{ $input_name }}"
-                                          name="{{ $input_name }}"
-                                          autocomplete="off"
-                                          class="{{ $input_class }} block w-full h-32">{{ $course->{$input_name} }}</x-textarea>
+                                            name="{{ $input_name }}"
+                                            autocomplete="off"
+                                            class="{{ $input_class }} block w-full h-32">{{ $course->{$input_name} }}</x-textarea>
                             @elseif($input['type'] === 'checkbox')
                                 <x-input type="checkbox"
-                                       id="{{ $input_name }}"
-                                       name="{{ $input_name }}"
-                                       value="{{ $course->{$input_name} }}"
-                                       class="{{ $input_class }} checked:bg-blue-600" checked/>
+                                         id="{{ $input_name }}"
+                                         name="{{ $input_name }}"
+                                         value="{{ $course->{$input_name} }}"
+                                         class="{{ $input_class }} checked:bg-blue-600" checked/>
                             @endif
                         </div>
                     @endforeach

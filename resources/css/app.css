@@ -2,6 +2,16 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+label[for] {
+    cursor: pointer;
+}
+
+select {
+    background-image: url(/svg/chevron_down.svg);
+    background-position: center right 1rem;
+    background-repeat: no-repeat;
+}
+
 [data-tab] {
     display: none;
 }

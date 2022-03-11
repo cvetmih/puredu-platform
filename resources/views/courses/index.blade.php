@@ -4,7 +4,7 @@
             <x-button href="{{ route('courses.create') }}" size="big">Create a new course</x-button>
         </x-page-header>
 
-        <x-box class="grid grid-cols-5 gap-4">
+        <x-box class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             @foreach($courses as $key => $course)
                 @php
                     $colors = [
@@ -15,7 +15,7 @@
                     ];
                 @endphp
                 <a href="{{ route('courses.show', $course) }}"
-                   class="flex gap-10 flex-col justify-between bg-gradient-to-br {{ $colors[$key % count($colors)] }} p-6 rounded-xl transform hover:-translate-y-1.5 transition-transform">
+                   class="flex gap-10 flex-col justify-between min-h-64 bg-gradient-to-br {{ $colors[$key % count($colors)] }} p-6 rounded-xl transform hover:-translate-y-1.5 transition-transform">
 {{--                                    <div>{{ $course->excerpt }}</div>--}}
 {{--                                    <div>{{ $course->users->count() }}</div>--}}
 {{--                                    <div>{{ $course->created_at }}</div>--}}

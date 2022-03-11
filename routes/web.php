@@ -59,7 +59,8 @@ Route::group(['prefix' => 'courses', 'middleware' => 'auth'], function () {
 
 Route::group(['prefix' => 'lessons', 'middleware' => 'auth'], function () {
     Route::get('/', [LessonController::class, 'index'])->name('lessons.index');
-    Route::get('/create', [LessonController::class, 'create'])->name('lessons.create');
+//    Route::get('/create', [LessonController::class, 'create'])->name('lessons.create');
+    Route::get('/create/{type}', [LessonController::class, 'create'])->name('lessons.create');
     Route::post('/store', [LessonController::class, 'store'])->name('lessons.store');
     Route::get('/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
     Route::put('/{lesson}/update', [LessonController::class, 'update'])->name('lessons.update');
@@ -69,8 +70,8 @@ Route::group(['prefix' => 'lessons', 'middleware' => 'auth'], function () {
 
 Route::group(['prefix' => 'videos', 'middleware' => 'auth'], function () {
     Route::get('/', [VideoController::class, 'index'])->name('videos.index');
-//    Route::get('/create', [VideoController::class, 'create'])->name('videos.create');
-//    Route::post('/store', [VideoController::class, 'store'])->name('videos.store');
+    Route::get('/create', [VideoController::class, 'create'])->name('videos.create');
+    Route::post('/store', [VideoController::class, 'store'])->name('videos.store');
     Route::get('/{video}/edit', [VideoController::class, 'edit'])->name('videos.edit');
     Route::put('/{video}/update', [VideoController::class, 'update'])->name('videos.update');
     Route::delete('/{video}/destroy', [VideoController::class, 'destroy'])->name('videos.destroy');

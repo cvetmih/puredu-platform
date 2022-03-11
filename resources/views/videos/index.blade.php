@@ -1,6 +1,8 @@
 <x-app-layout>
     <x-container>
-        <x-page-header title="Videos"/>
+        <x-page-header title="Videos">
+            <x-button size="big" href="{{ route('videos.create') }}">Add new video</x-button>
+        </x-page-header>
 
         <x-box class="flex flex-col gap-8">
             @foreach($videos as $video)

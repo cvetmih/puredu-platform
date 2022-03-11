@@ -11,23 +11,38 @@ class Lesson extends Model
 
     protected $guarded = [];
 
-    public function course(){
+    public $types = [
+        'video' => 'Video',
+        'quiz' => 'Quiz',
+        'multimedia' => 'Multimedia',
+        'text' => 'Text',
+        'survey' => 'Survey',
+        'audio' => 'Audio',
+        'download' => 'Download',
+    ];
+
+    public function course()
+    {
         return $this->belongsTo(Course::class);
     }
 
-    public function chapter(){
+    public function chapter()
+    {
         return $this->belongsTo(Chapter::class);
     }
 
-    public function image(){
+    public function image()
+    {
         return $this->belongsTo(Image::class);
     }
 
-    public function video(){
+    public function video()
+    {
         return $this->belongsTo(Video::class);
     }
 
-    public function activities() {
+    public function activities()
+    {
         return $this->belongsToMany(Activity::class);
     }
 

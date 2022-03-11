@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @stack('styles')
 </head>
 <body class="font-sans antialiased min-h-screen bg-gray-900 text-white flex">
 
@@ -28,5 +29,6 @@
 
 <script src="{{ mix('js/app.js') }}" defer></script>
 @notifyJs
+@stack('scripts')
 </body>
 </html>

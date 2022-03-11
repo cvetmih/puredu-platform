@@ -23,10 +23,10 @@ module.exports = {
     },
 
     variants: {
-        // extend: {
-        //     opacity: ['disabled'],
-        //     backgroundColor: ['checked'],
-        // },
+        extend: {
+            opacity: ['disabled'],
+            backgroundColor: ['checked'],
+        },
     },
 
     // plugins: [require('@tailwindcss/forms')],

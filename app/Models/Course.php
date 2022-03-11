@@ -15,6 +15,10 @@ class Course extends Model
         'is_active' => 'boolean'
     ];
 
+    protected $with = [
+        'chapters'
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class);

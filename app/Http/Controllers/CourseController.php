@@ -25,7 +25,8 @@ class CourseController extends Controller
             ],
             'slug' => [
                 'label' => 'Slug',
-                'type' => 'text',
+                'type' => 'slug',
+                'slug' => 'title',
                 'required' => true,
                 'quick_edit' => false,
             ],

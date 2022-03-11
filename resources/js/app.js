@@ -2,6 +2,13 @@
 //
 // require('alpinejs');
 
+// Notifications
+const handleNotify = () => {
+
+}
+
+window.addEventListener('load', handleNotify);
+
 const tabItems = document.querySelectorAll('[data-tabs]');
 
 const handleTabsNavClick = (e) => {

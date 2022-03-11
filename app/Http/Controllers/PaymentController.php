@@ -71,9 +71,9 @@ class PaymentController extends Controller
             'method' => $request->input('method'),
         ]);
 
-        return redirect()->to(route('payments.show', $payment))->with([
-            'message' => 'New payment created.'
-        ]);
+        notify()->success("Payment #$payment->id was created.", 'Success');
+
+        return redirect()->to(route('payments.show', $payment));
     }
 
     public function show(Payment $payment)
@@ -105,16 +105,15 @@ class PaymentController extends Controller
             'method' => $request->input('method'),
         ]);
 
-        return redirect()->to(route('payments.show', $payment))->with([
-            'message' => 'Payment was updated.'
-        ]);
+        notify()->success("Payment #$payment->id was updated.", 'Success');
+
+        return redirect()->to(route('payments.show', $payment));
     }
 
     public function destroy(Payment $payment)
     {
         $payment->delete();
-        return redirect()->back()->with([
-            'message' => 'Payment was deleted.'
-        ]);
+        notify()->success("Payment was deleted.", 'Success');
+        return redirect()->back();
     }
 }

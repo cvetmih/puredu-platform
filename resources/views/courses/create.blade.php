@@ -10,18 +10,6 @@
             >
                 {{ csrf_field() }}
 
-                @if($errors->any())
-                    <div role="alert">
-                        <div class="border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-                            <ul>
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-
                 <nav class="flex gap-4 border-b border-gray-800">
                     <button type="button"
                             class="py-2 px-6 font-bold bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg">

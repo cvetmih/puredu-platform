@@ -85,9 +85,9 @@ class OrderController extends Controller
             'referrer' => $request->input('referrer'),
         ]);
 
-        return redirect()->to(route('orders.show', $order))->with([
-            'message' => 'New order created.'
-        ]);
+        notify()->success("Order #$order->id was created.", 'Success');
+
+        return redirect()->to(route('orders.show', $order));
     }
 
     public function show(Order $order)
@@ -124,16 +124,15 @@ class OrderController extends Controller
             'referrer' => $request->input('referrer'),
         ]);
 
-        return redirect()->to(route('orders.show', $order))->with([
-            'message' => 'Order was updated.'
-        ]);
+        notify()->success("Order #$order->id was updated.", 'Success');
+
+        return redirect()->to(route('orders.show', $order));
     }
 
     public function destroy(Order $order)
     {
         $order->delete();
-        return redirect()->back()->with([
-            'message' => 'Order was deleted.'
-        ]);
+        notify()->success("Order was deleted.", 'Success');
+        return redirect()->back();
     }
 }

@@ -13,14 +13,17 @@ use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
-    private $inputs;
-
     public function __construct()
+    {
+
+    }
+
+    private function getInputs()
     {
         $courses = Course::all()->pluck('title', 'id');
         $chapters = Chapter::all()->pluck('title', 'id');
 
-        $this->inputs = [
+        return [
             'title' => [
                 'label' => 'Title',
                 'type' => 'text',
@@ -79,7 +82,7 @@ class LessonController extends Controller
     public function create()
     {
         return view('lessons.create')->with([
-            'inputs' => $this->inputs
+            'inputs' => $this->getInputs()
         ]);
     }
 
@@ -107,6 +110,8 @@ class LessonController extends Controller
             'chapter_id' => $request->input('chapter_id'),
         ]);
 
+        notify()->success("Lesson \"$lesson->title\" was created.", 'Success');
+
         return redirect()->to(route('lessons.show', $lesson))->with([
             'message' => 'New lesson created.'
         ]);
@@ -114,17 +119,14 @@ class LessonController extends Controller
 
     public function show(Lesson $lesson)
     {
-//        return view('lessons.show')->with(compact('lesson'));
-        return view('lessons.show')->with([
-            'lesson' => $lesson
-        ]);
+        return view('lessons.show')->with(compact('lesson'));
     }
 
     public function edit(Lesson $lesson)
     {
         return view('lessons.edit')->with([
             'lesson' => $lesson,
-            'inputs' => $this->inputs
+            'inputs' => $this->getInputs()
         ]);
     }
 
@@ -150,16 +152,15 @@ class LessonController extends Controller
             'course_id' => $request->input('course_id'),
         ]);
 
-        return redirect()->to(route('lessons.show', $lesson))->with([
-            'message' => 'Lesson was updated.'
-        ]);
+        notify()->success("Lesson \"$lesson->title\" was updated.", 'Success');
+
+        return redirect()->to(route('lessons.show', $lesson));
     }
 
     public function destroy(Lesson $lesson)
     {
         $lesson->delete();
-        return redirect()->back()->with([
-            'message' => 'Lesson was deleted.'
-        ]);
+        notify()->success("Lesson \"$lesson->title\" was deleted.", 'Success');
+        return redirect()->back();
     }
 }

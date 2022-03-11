@@ -108,9 +108,9 @@ class CourseController extends Controller
             'image_id' => $request->input('image_id'),
         ]);
 
-        return redirect()->to(route('courses.show', $course))->with([
-            'message' => 'New course created.'
-        ]);
+        notify()->success("Course \"$course->title\" was created.", 'Success');
+
+        return redirect()->to(route('courses.show', $course));
     }
 
     public function show(Course $course)
@@ -151,16 +151,15 @@ class CourseController extends Controller
             'image_id' => $request->input('image_id'),
         ]);
 
-        return redirect()->to(route('courses.show', $course))->with([
-            'message' => 'Course was updated.'
-        ]);
+        notify()->success("Course \"$course->title\" was updated.", 'Success');
+
+        return redirect()->to(route('courses.show', $course));
     }
 
     public function destroy(Course $course)
     {
         $course->delete();
-        return redirect()->back()->with([
-            'message' => 'Course was deleted.'
-        ]);
+        notify()->success("Course was deleted.", 'Success');
+        return redirect()->back();
     }
 }

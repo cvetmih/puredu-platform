@@ -77,9 +77,9 @@ class UserController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->to(route('users.show', $user))->with([
-            'message' => 'New user created.'
-        ]);
+        notify()->success("User $user->name was created.", 'Success');
+
+        return redirect()->to(route('users.show', $user));
     }
 
     public function show(User $user)
@@ -103,7 +103,6 @@ class UserController extends Controller
             'email' => 'required',
             'password' => ['present', 'confirmed']
         ]);
-//        $request->validate();
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
@@ -114,17 +113,16 @@ class UserController extends Controller
             'email' => $request->input('email'),
         ]);
 
-        return redirect()->back()->with([
-            'message' => 'User was updated.'
-        ]);
+        notify()->success("User $user->name was created.", 'Success');
+
+        return redirect()->back();
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->back()->with([
-            'message' => 'User was deleted.'
-        ]);
+        notify()->success("User was deleted.", 'Success');
+        return redirect()->back();
     }
 
     public function enroll(User $user, Request $request)
@@ -140,8 +138,8 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect()->back()->with([
-            'message' => 'User was enrolled.'
-        ]);
+        notify()->success("User was enrolled.", 'Success');
+
+        return redirect()->back();
     }
 }

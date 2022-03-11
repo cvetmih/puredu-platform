@@ -10,6 +10,10 @@
 // require('./bootstrap');
 //
 // require('alpinejs');
+// Notifications
+var handleNotify = function handleNotify() {};
+
+window.addEventListener('load', handleNotify);
 var tabItems = document.querySelectorAll('[data-tabs]');
 
 var handleTabsNavClick = function handleTabsNavClick(e) {

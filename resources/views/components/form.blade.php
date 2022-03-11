@@ -2,18 +2,6 @@
     <form {{ $attributes->merge(['class' => 'flex flex-col gap-8']) }}>
         {{ csrf_field() }}
 
-        @if($errors->any())
-            <div role="alert">
-                <div class="border border-red-400 bg-red-100 px-4 py-3 text-red-700 rounded-lg">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif
-
         <div class="flex flex-col gap-4">
             @foreach($inputs as $name => $attr)
                 <div class="flex flex-col gap-2">

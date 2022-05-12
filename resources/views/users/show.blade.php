@@ -75,19 +75,16 @@
                     @csrf
                     <div class="flex flex-col gap-2 flex-1">
                         <label for="course_id" class="text-sm font-bold">Enroll {{ $user->name }} in</label>
-                        <select name="course_id" id="course_id"
-                                class="border border-gray-700 bg-white bg-opacity-5 block rounded-lg py-3 px-4 text-md w-full text-white text-opacity-70 focus:text-opacity-100 @error('course_id') border-pink-600 @enderror">
+                        <x-select name="course_id" id="course_id"
+                                  class="{{ $errors->has('course_id') ? 'border-pink-600' :'' }}"
+                        >
                             <option value=""></option>
                             @foreach($courses as $id => $title)
                                 <option value="{{ $id }}">{{ $title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    <button
-                        type="submit"
-                        class="inline-flex bg-gradient-to-br from-green-400 to-blue-400 py-3 px-6 rounded-full font-bold">
-                        Enroll
-                    </button>
+                    <x-button type="submit" size="big">Enroll</x-button>
                 </form>
 
                 <x-box>
@@ -125,8 +122,15 @@
                         <div
                             class="px-6 py-4 flex gap-4 justify-between bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== $user->activities->count()) border-b border-gray-800 @endif">
                             <div>{{ $activity->course->title }}</div>
-                            <div>[{{ $activity->lesson->icon }}] {{ $activity->lesson->title }}</div>
-                            <div>{{ $activity->type }}</div>
+                            <div class="inline-flex items-center gap-2">
+                                <div class="w-4">
+                                    <x-icon icon="{{ $activity->lesson->icon }}"/>
+                                </div>
+                                {{ $activity->lesson->title }}
+                            </div>
+                            <div>
+                                <x-tag status="{{ $activity->type }}"/>
+                            </div>
                             <div>{{ $activity->created_at }}</div>
                         </div>
                     @endforeach

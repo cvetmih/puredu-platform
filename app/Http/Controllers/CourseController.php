@@ -22,6 +22,7 @@ class CourseController extends Controller
                 'type' => 'text',
                 'required' => true,
                 'quick_edit' => true,
+                'hidden' => false
             ],
             'slug' => [
                 'label' => 'Slug',
@@ -29,35 +30,41 @@ class CourseController extends Controller
                 'slug' => 'title',
                 'required' => true,
                 'quick_edit' => false,
+                'hidden' => true
             ],
             'excerpt' => [
                 'label' => 'Excerpt',
                 'type' => 'textarea',
                 'required' => true,
                 'quick_edit' => true,
+                'hidden' => false
             ],
             'description' => [
                 'label' => 'Description',
                 'type' => 'textarea',
                 'required' => true,
                 'quick_edit' => false,
+                'hidden' => false
             ],
             'price' => [
                 'label' => 'Price',
                 'type' => 'text',
                 'required' => true,
                 'quick_edit' => true,
+                'hidden' => false
             ],
             'image_id' => [
                 'label' => 'Image ID',
                 'type' => 'text',
                 'required' => true,
                 'quick_edit' => false,
+                'hidden' => false
             ],
             'is_active' => [
                 'label' => 'Is active',
                 'type' => 'checkbox',
                 'quick_edit' => true,
+                'hidden' => false
             ],
         ];
 

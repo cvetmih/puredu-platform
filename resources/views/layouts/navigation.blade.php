@@ -7,6 +7,7 @@
         'videos.index' => 'Videos',
         'orders.index' => 'Orders',
         'payments.index' => 'Payments',
+        'coupons.index' => 'Coupons',
     ];
 @endphp
 <nav x-data="{ open: false }" class="flex flex-col gap-8 bg-gray-900 border-r border-gray-800 py-8 h-screen">

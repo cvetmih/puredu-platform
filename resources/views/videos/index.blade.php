@@ -11,7 +11,7 @@
                     {{-- todo: add image --}}
                     <div class="flex items-start px-6 py-4 gap-8">
                         <div class="w-52">
-                            thumb
+                            <img src="{{ $video->image_url }}" alt="{{ $video->title }} thumbnail" class="rounded-lg">
                         </div>
                         <div class="flex-1 flex flex-col gap-2">
                             <div>
@@ -22,8 +22,13 @@
                                         ,@endif
                                 @endforeach
                             </div>
+                        </div>
+                        <div class="flex-1 flex flex-col gap-2">
                             <div>
-                                Times played: todo
+                                Times played: {{ $video->play_count }}
+                            </div>
+                            <div>
+                                Last watched: {{ $video->last_watched ?? 'Never' }}
                             </div>
                         </div>
                     </div>

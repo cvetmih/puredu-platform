@@ -22,27 +22,32 @@ class VideoController extends Controller
             'title' => [
                 'label' => 'Title',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'hidden' => false
             ],
             'vimeo_id' => [
                 'label' => 'Vimeo ID',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'hidden' => false
             ],
             'image_id' => [
                 'label' => 'Image ID',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'hidden' => false
             ],
             'play_count' => [
                 'label' => 'Play Count',
                 'type' => 'text',
-                'required' => false
+                'required' => false,
+                'hidden' => false
             ],
             'last_watched' => [
                 'label' => 'Last Watched',
                 'type' => 'text',
-                'required' => false
+                'required' => false,
+                'hidden' => false
             ],
         ];
     }

@@ -25,18 +25,21 @@ class OrderController extends Controller
                 'label' => 'User',
                 'type' => 'select',
                 'required' => true,
-                'options' => $users
+                'options' => $users,
+                'hidden' => false
             ],
             'course_id' => [
                 'label' => 'Course ID',
                 'type' => 'select',
                 'required' => true,
-                'options' => $courses
+                'options' => $courses,
+                'hidden' => false
             ],
             'price' => [
                 'label' => 'Price',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'hidden' => false
             ],
             'status' => [
                 'label' => 'Status',
@@ -46,7 +49,8 @@ class OrderController extends Controller
                     'paid' => 'Paid',
                     'waiting' => 'Waiting',
                     'error' => 'Error',
-                ]
+                ],
+                'hidden' => false
             ],
             'method' => [
                 'label' => 'Method',
@@ -56,12 +60,14 @@ class OrderController extends Controller
                     'paypal' => 'PayPal',
                     'card' => 'Card payment',
                     'bank' => 'Bank transfer',
-                ]
+                ],
+                'hidden' => false
             ],
             'referrer' => [
                 'label' => 'Referrer',
                 'type' => 'text',
-                'required' => true
+                'required' => true,
+                'hidden' => false
             ],
         ];
     }
@@ -71,7 +77,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('user', 'course')->get();
+        $orders = Order::with('user', 'course')->latest()->get();
         return view('orders.index')->with(compact('orders'));
     }
 

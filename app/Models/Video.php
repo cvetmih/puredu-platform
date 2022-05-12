@@ -26,4 +26,9 @@ class Video extends Model
         // belongs to many?
         return $this->hasMany(Lesson::class);
     }
+
+    public function getImageUrlAttribute($value)
+    {
+        return isset($this->image_id) && isset($this->image) ? $this->image->url : asset('img/placeholder.jpg');
+    }
 }

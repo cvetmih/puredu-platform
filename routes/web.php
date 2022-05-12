@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\OrderController;
@@ -96,6 +97,16 @@ Route::group(['prefix' => 'orders', 'middleware' => 'auth'], function () {
     Route::put('/{order}/update', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
+});
+
+Route::group(['prefix' => 'coupons', 'middleware' => 'auth'], function () {
+    Route::get('/', [CouponController::class, 'index'])->name('coupons.index');
+    Route::get('/create', [CouponController::class, 'create'])->name('coupons.create');
+    Route::post('/store', [CouponController::class, 'store'])->name('coupons.store');
+    Route::get('/{video}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
+    Route::put('/{video}/update', [CouponController::class, 'update'])->name('coupons.update');
+    Route::delete('/{video}/destroy', [CouponController::class, 'destroy'])->name('coupons.destroy');
+    Route::get('/{video}', [CouponController::class, 'show'])->name('coupons.show');
 });
 
 Route::get('test', function () {

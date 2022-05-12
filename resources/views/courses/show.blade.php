@@ -23,6 +23,9 @@
                                    class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4 flex items-center justify-between gap-4">
                                     <div>{{ $key + 1 }}</div>
                                     <div class="flex-1">{{ $lesson->title }}</div>
+                                    @if($lesson->is_free)
+                                        <x-tag status="free"/>
+                                    @endif
                                     <div class="w-5">
                                         <x-icon icon="{{ $lesson->type }}"/>
                                     </div>

@@ -21,6 +21,13 @@ class Lesson extends Model
         'download' => 'Download',
     ];
 
+    protected $casts = [
+        'is_free' => 'boolean',
+        'is_downloadable' => 'boolean',
+        'is_autoplay' => 'boolean',
+        'questions' => 'json'
+    ];
+
     public function course()
     {
         return $this->belongsTo(Course::class);

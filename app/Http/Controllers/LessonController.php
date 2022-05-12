@@ -43,8 +43,8 @@ class LessonController extends Controller
                 'show_in' => ['create'],
                 'hidden' => true,
             ],
-            'description' => [
-                'label' => 'Description',
+            'content' => [
+                'label' => 'Content',
                 'type' => 'textarea',
                 'required' => true,
                 'for_types' => $all_types,
@@ -95,6 +95,27 @@ class LessonController extends Controller
                 'show_in' => ['create', 'edit'],
                 'hidden' => false,
             ],
+            'is_free' => [
+                'label' => 'Is free',
+                'type' => 'checkbox',
+                'hidden' => false,
+                'for_types' => $all_types,
+                'show_in' => ['create', 'edit'],
+            ],
+            'is_downloadable' => [
+                'label' => 'Is downloadable',
+                'type' => 'checkbox',
+                'hidden' => false,
+                'for_types' => ['multimedia', 'audio', 'download'],
+                'show_in' => ['create', 'edit'],
+            ],
+            'questions' => [
+                'label' => 'Questions',
+                'type' => 'repeatable',
+                'hidden' => false,
+                'for_types' => ['quiz', 'survey'],
+                'show_in' => ['create', 'edit'],
+            ],
         ];
     }
 
@@ -136,7 +157,7 @@ class LessonController extends Controller
         $request->validate([
             'title' => 'required',
             'slug' => 'required',
-            'description' => 'required',
+            'content' => 'required',
             'type' => 'required',
             'image_id' => 'required',
             'video_id' => 'required',
@@ -147,7 +168,7 @@ class LessonController extends Controller
         $lesson = Lesson::create([
             'title' => $request->input('title'),
             'slug' => $request->input('slug'),
-            'description' => $request->input('description'),
+            'content' => $request->input('content'),
             'type' => $request->input('type'),
             'image_id' => $request->input('image_id'),
             'video_id' => $request->input('video_id'),
@@ -177,7 +198,7 @@ class LessonController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'description' => 'required',
+            'content' => 'required',
             'type' => 'required',
             'image_id' => 'required',
             'video_id' => 'required',
@@ -186,7 +207,7 @@ class LessonController extends Controller
 
         $lesson->update([
             'title' => $request->input('title'),
-            'description' => $request->input('description'),
+            'content' => $request->input('content'),
             'type' => $request->input('type'),
             'image_id' => $request->input('image_id'),
             'video_id' => $request->input('video_id'),

@@ -27,6 +27,21 @@ Route::middleware('auth:sanctum')->get('/user/courses', function (Request $reque
     return $request->user()->courses;
 });
 
+Route::middleware('auth:sanctum')->get('/user/orders', function (Request $request) {
+    return $request->user()->orders()->orderBy('created_at', 'DESC')->get();
+});
+
+Route::middleware('auth:sanctum')->post('/user/update', function (Request $request) {
+    $user = $request->user();
+    $user->update($request->only('name', 'email', 'password'));
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'User successfuly updated.'
+    ]);
+//    return $request->user()->courses;
+});
+
 Route::get('/courses', function () {
     return Course::whereIsActive(true)->get();
 });
@@ -50,6 +65,7 @@ Route::post('/orders/create', function () {
             'course_id' => request('course_id'),
             'bundle_id' => request('bundle_id'),
             'price' => request('price'),
+            'type' => request('type'),
             'status' => 'waiting',
             'method' => request('method'),
             'referrer' => request('referrer'),
@@ -98,3 +114,16 @@ Route::post('/orders/confirm', function () {
         'message' => 'Order was not found.'
     ]);
 });
+
+Route::post('/newsletter', function () {
+    \App\Models\Lead::create([
+        'email' => request('email'),
+        'ip' => 0
+    ]);
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Lead successfuly created.'
+    ]);
+});
+

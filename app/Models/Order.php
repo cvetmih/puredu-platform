@@ -11,6 +11,11 @@ class Order extends Model
 
     protected $guarded = [];
 
+    protected $with = [
+        'course',
+        'bundle'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

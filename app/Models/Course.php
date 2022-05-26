@@ -39,6 +39,11 @@ class Course extends Model
         return $this->belongsToMany(Activity::class);
     }
 
+    public function bundles()
+    {
+        return $this->belongsToMany(Bundle::class);
+    }
+
     public function getImageUrlAttribute($value)
     {
         return isset($this->image_id) && isset($this->image) ? $this->image->url : asset('img/placeholder.jpg');

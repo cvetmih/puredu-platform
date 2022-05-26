@@ -7,9 +7,14 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
+use App\Models\Bundle;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +27,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/aaa', function(){
+   $bundle = Bundle::where('id', 1)->first();
+   dd($bundle->courses);
+});
 
+Route::get('/', function () {
     $total_revenue = Order::where('status', '=', 'paid')->sum('price');
     $users_this_month = User::where('created_at', '>', now()->subMonth())->count();
     $orders_this_month = Order::where('created_at', '>', now()->subMonth())->count();

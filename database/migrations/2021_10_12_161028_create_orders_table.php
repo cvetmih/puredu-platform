@@ -16,7 +16,9 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('course_id');
+            $table->integer('course_id')->nullable();
+            $table->integer('bundle_id')->nullable();
+            $table->string('type')->default('course');
             $table->integer('price');
             $table->string('status');
             $table->string('method');

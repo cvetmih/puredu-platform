@@ -20,4 +20,9 @@ class Order extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function bundle()
+    {
+        return $this->belongsTo(Bundle::class);
+    }
 }

@@ -19,12 +19,20 @@ use Illuminate\Support\Str;
 |
 */
 
+// USER
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::middleware('auth:sanctum')->get('/user/courses', function (Request $request) {
     return $request->user()->courses;
+});
+
+Route::middleware('auth:sanctum')->get('/user/has-course/{slug}', function (Request $request, $slug) {
+    return [
+        'status' => 200,
+        'message' => $request->user()->courses()->where('slug', $slug)->exists()
+    ];
 });
 
 Route::middleware('auth:sanctum')->get('/user/orders', function (Request $request) {
@@ -39,25 +47,68 @@ Route::middleware('auth:sanctum')->post('/user/update', function (Request $reque
         'status' => 200,
         'message' => 'User successfuly updated.'
     ]);
-//    return $request->user()->courses;
 });
 
+// COURSES
 Route::get('/courses', function () {
     return Course::whereIsActive(true)->get();
 });
 
-Route::get('/courses/{course}', function (Course $course) {
-    return $course;
+Route::get('/courses/{course}', function ($course) {
+    return Course::where('slug', $course)->firstOrFail();
+});
+
+// BUNDLES
+Route::get('/bundles', function () {
+    return Bundle::whereIsActive(true)->get();
+});
+
+Route::get('/bundles/{bundle}', function ($bundle) {
+    return Bundle::where('slug', $bundle)->firstOrFail();
+});
+
+// CHAPTERS
+Route::get('/courses/{course}/chapters', function ($course) {
+    $course = Course::where('slug', $course)->with('lessons')->firstOrFail();
+
+    // todo: get real final number
+    $users_final_number = 0;
+
+    $chapters = new \Illuminate\Support\Collection();
+    foreach ($course->chapters as $chapter) {
+        $c = $chapter;
+        $lessons = new \Illuminate\Support\Collection();
+        foreach ($chapter->lessons as $lesson) {
+            $l = $lesson;
+            $l->finished = false;
+//            $l->finished = rand(0, 100) < 50;
+            $lessons->add($l);
+        }
+
+        $c->lessons = $lessons;
+        $chapters->add($c);
+    }
+
+    return $chapters;
 });
 
 Route::get('/courses/{course}/lessons', function (Course $course) {
     return $course->lessons;
 });
 
-Route::get('/lessons/{lesson}', function (Lesson $lesson) {
-    return $lesson;
+// LESSONS
+Route::get('/courses/{course}/{chapter}/{lesson}', function ($course, $chapter, $lesson) {
+    $course = Course::where('slug', $course)->firstOrFail();
+
+    return Lesson::where([
+        ['course_id', '=', $course->id],
+        ['chapter_id', '=', $chapter],
+        ['slug', '=', $lesson]
+    ])->with('chapter')->firstOrFail();
 });
 
+
+// ORDERS
 Route::post('/orders/create', function () {
     try {
         $order = Order::create([
@@ -115,6 +166,8 @@ Route::post('/orders/confirm', function () {
     ]);
 });
 
+
+// NEWSLETTER
 Route::post('/newsletter', function () {
     \App\Models\Lead::create([
         'email' => request('email'),

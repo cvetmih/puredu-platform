@@ -28,8 +28,8 @@ error_reporting(E_ALL);
 */
 
 Route::get('/aaa', function(){
-   $bundle = Bundle::where('id', 1)->first();
-   dd($bundle->courses);
+//   $bundle = Bundle::where('id', 1)->first();
+//   dd($bundle->courses);
 });
 
 Route::get('/', function () {

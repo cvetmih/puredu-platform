@@ -12,11 +12,19 @@ class Course extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'timeline' => 'json',
+        'coach_images' => 'json',
+        'coach_body' => 'json',
     ];
 
     protected $with = [
         'chapters'
+    ];
+
+    protected $appends = [
+        'first_lesson',
+        'first_chapter',
     ];
 
     public function users()
@@ -46,6 +54,19 @@ class Course extends Model
 
     public function getImageUrlAttribute($value)
     {
+        return asset('img/placeholder.jpg');
         return isset($this->image_id) && isset($this->image) ? $this->image->url : asset('img/placeholder.jpg');
+    }
+
+    public function getFirstLessonAttribute()
+    {
+        $first_lesson = Lesson::where('course_id', $this->id)->first();
+        return $first_lesson->slug;
+    }
+
+    public function getFirstChapterAttribute()
+    {
+        $first_lesson = Lesson::where('course_id', $this->id)->first();
+        return $first_lesson->chapter_id;
     }
 }

@@ -28,6 +28,11 @@ class Lesson extends Model
         'questions' => 'json'
     ];
 
+    protected $with = [
+//        'video',
+//        'chapter'
+    ];
+
     public function course()
     {
         return $this->belongsTo(Course::class);

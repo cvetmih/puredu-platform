@@ -17,7 +17,7 @@
                    class="px-6 py-4 grid grid-cols-5 bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== count($orders)) border-b border-gray-800 @endif"
                 >
                     <div>{{ $order->user->name }}</div>
-                    <div>{{ $order->course->title }}</div>
+                    <div>{{ $order->course ? $order->course->title : $order->bundle->title }}</div>
                     <div>{{ format_money($order->price) }}</div>
                     <div>
                         <x-tag status="{{ $order->status }}"/>

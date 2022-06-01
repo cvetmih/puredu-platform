@@ -180,3 +180,19 @@ Route::post('/newsletter', function () {
     ]);
 });
 
+// SURVEY
+Route::middleware('auth:sanctum')->post('/surveys/create', function (Request $request) {
+    $data = [
+        'user_id' => $request->user()->id,
+        'course_id' => $request->get('course_id'),
+        'lesson_id' => $request->get('lesson_id'),
+        'data' => json_encode($request->except('course_id', 'lesson_id'))
+    ];
+
+    \App\Models\Survey::create($data);
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Survey successfully saved.'
+    ]);
+});

@@ -7,7 +7,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
-use App\Models\Bundle;
+use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -27,9 +28,20 @@ error_reporting(E_ALL);
 |
 */
 
-Route::get('/aaa', function(){
-//   $bundle = Bundle::where('id', 1)->first();
-//   dd($bundle->courses);
+Route::get('/aaa', function () {
+//    $courses = Course::all();
+//    foreach ($courses as $course) {
+//        $key = 1;
+//        $lessons = Lesson::where('course_id', $course->id)->orderBy('id', 'ASC')->get();
+//
+//        foreach ($lessons as $lesson) {
+//            $lesson->number = $key;
+//            $lesson->save();
+//            $key++;
+//        }
+//    }
+//
+//    dd('a');
 });
 
 Route::get('/', function () {

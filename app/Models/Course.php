@@ -25,6 +25,7 @@ class Course extends Model
     protected $appends = [
         'first_lesson',
         'first_chapter',
+        'lesson_count'
     ];
 
     public function users()
@@ -68,5 +69,10 @@ class Course extends Model
     {
         $first_lesson = Lesson::where('course_id', $this->id)->first();
         return $first_lesson->chapter_id;
+    }
+
+    public function getLessonCountAttribute()
+    {
+        return $this->lessons()->count();
     }
 }

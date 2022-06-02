@@ -4,7 +4,9 @@ use App\Models\Bundle;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Order;
+use App\Models\Progress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -29,16 +31,73 @@ Route::middleware('auth:sanctum')->get('/user/courses', function (Request $reque
 });
 
 Route::middleware('auth:sanctum')->get('/user/has-course/{slug}', function (Request $request, $slug) {
+    // todo: return response()->json()
     return [
         'status' => 200,
         'message' => $request->user()->courses()->where('slug', $slug)->exists()
     ];
 });
 
+Route::middleware('auth:sanctum')->get('/user/course-progress/{id}', function (Request $request, $id) {
+    $progress = Progress::where([
+        ['course_id', '=', $id],
+        ['user_id', '=', $request->user()->id]
+    ])->first();
+
+    return response()->json([
+        'status' => 200,
+        'percentage' => $progress->percentage,
+    ]);
+});
+
+Route::middleware('auth:sanctum')->get('/user/last-lesson/{id}', function (Request $request, $id) {
+    $last_lesson = DB::table('lesson_user')->where([
+        ['user_id', '=', $request->user()->id],
+        ['course_id', '=', (int) $id]
+    ]);
+
+    if ($last_lesson->exists()) {
+        $last_lesson = $last_lesson->orderBy('lesson_id', 'DESC')->first();
+        $last_lesson = Lesson::where('id', $last_lesson->lesson_id)->first();
+    } else {
+        $last_lesson = Course::where('id', $id)->first()->lessons->first();
+    }
+
+    return response()->json([
+        'status' => 200,
+        'last_lesson' => $last_lesson,
+    ]);
+});
+
 Route::middleware('auth:sanctum')->get('/user/orders', function (Request $request) {
     return $request->user()->orders()->orderBy('created_at', 'DESC')->get();
 });
 
+// NEW USER CREATED
+Route::post('/user/new', function (Request $request) {
+    $user_id = $request->get('user_id');
+
+    $progress_exists = Progress::where('user_id', $user_id)->exists();
+
+    if (!$progress_exists) {
+        $courses = Course::all();
+
+        foreach ($courses as $course) {
+            Progress::create([
+                'user_id' => $user_id,
+                'course_id' => $course->id,
+                'percentage' => 0
+            ]);
+        }
+    }
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'User prepared successfully.'
+    ]);
+});
+
+// UPDATING USER
 Route::middleware('auth:sanctum')->post('/user/update', function (Request $request) {
     $user = $request->user();
     $user->update($request->only('name', 'email', 'password'));
@@ -97,14 +156,20 @@ Route::get('/courses/{course}/lessons', function (Course $course) {
 });
 
 // LESSONS
-Route::get('/courses/{course}/{chapter}/{lesson}', function ($course, $chapter, $lesson) {
+Route::middleware('auth:sanctum')->get('/courses/{course}/{chapter}/{lesson}', function (Request $request, $course, $chapter, $lesson) {
+    // todo: validate if user can see course
+
     $course = Course::where('slug', $course)->firstOrFail();
 
-    return Lesson::where([
+    $lesson = Lesson::where([
         ['course_id', '=', $course->id],
         ['chapter_id', '=', $chapter],
         ['slug', '=', $lesson]
     ])->with('chapter')->firstOrFail();
+
+    update_progress($request->user(), $lesson);
+
+    return $lesson;
 });
 
 

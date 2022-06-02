@@ -53,7 +53,7 @@ Route::middleware('auth:sanctum')->get('/user/course-progress/{id}', function (R
 Route::middleware('auth:sanctum')->get('/user/last-lesson/{id}', function (Request $request, $id) {
     $last_lesson = DB::table('lesson_user')->where([
         ['user_id', '=', $request->user()->id],
-        ['course_id', '=', (int) $id]
+        ['course_id', '=', (int)$id]
     ]);
 
     if ($last_lesson->exists()) {
@@ -67,6 +67,13 @@ Route::middleware('auth:sanctum')->get('/user/last-lesson/{id}', function (Reque
         'status' => 200,
         'last_lesson' => $last_lesson,
     ]);
+});
+
+Route::middleware('auth:sanctum')->get('/user/finished-lessons/{id}', function (Request $request, $id) {
+    return DB::table('lesson_user')->where([
+        ['user_id', '=', $request->user()->id],
+        ['course_id', '=', $id]
+    ])->pluck('lesson_id');
 });
 
 Route::middleware('auth:sanctum')->get('/user/orders', function (Request $request) {

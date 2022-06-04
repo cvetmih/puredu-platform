@@ -220,6 +220,7 @@ Route::post('/orders/confirm', function () {
         $order->save();
 
         if ($order->type === 'course') {
+            $course = Course::where('id', $order->course_id)->first();
             $order->user->courses()->attach($order->course_id);
         } else if ($order->type === 'bundle') {
             $bundle = Bundle::where('id', $order->bundle_id)->first();
@@ -228,7 +229,9 @@ Route::post('/orders/confirm', function () {
 
         return response()->json([
             'status' => 200,
-            'message' => 'Payment was successful.'
+            'message' => 'Payment was successful.',
+            'item_type' => $order->type,
+            'item_slug' => $order->type === 'course' ? $course->slug : $bundle->slug
         ]);
     }
 

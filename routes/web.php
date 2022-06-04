@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 ini_set('display_errors', 1);
@@ -56,9 +57,9 @@ Route::get('/', function () {
         'orders_this_month' => $orders_this_month,
         'latest_orders' => $latest_orders
     ]);
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth', 'can:edit courses'])->name('dashboard');
 
-Route::group(['prefix' => 'users', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'users', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::get('/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
@@ -69,7 +70,7 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth'], function () {
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
 });
 
-Route::group(['prefix' => 'courses', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'courses', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [CourseController::class, 'index'])->name('courses.index');
     Route::get('/create', [CourseController::class, 'create'])->name('courses.create');
     Route::post('/store', [CourseController::class, 'store'])->name('courses.store');
@@ -79,7 +80,7 @@ Route::group(['prefix' => 'courses', 'middleware' => 'auth'], function () {
     Route::get('/{course}', [CourseController::class, 'show'])->name('courses.show');
 });
 
-Route::group(['prefix' => 'lessons', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'lessons', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [LessonController::class, 'index'])->name('lessons.index');
 //    Route::get('/create', [LessonController::class, 'create'])->name('lessons.create');
     Route::get('/create/{type}', [LessonController::class, 'create'])->name('lessons.create');
@@ -90,7 +91,7 @@ Route::group(['prefix' => 'lessons', 'middleware' => 'auth'], function () {
     Route::get('/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 });
 
-Route::group(['prefix' => 'videos', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'videos', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [VideoController::class, 'index'])->name('videos.index');
     Route::get('/create', [VideoController::class, 'create'])->name('videos.create');
     Route::post('/store', [VideoController::class, 'store'])->name('videos.store');
@@ -100,7 +101,7 @@ Route::group(['prefix' => 'videos', 'middleware' => 'auth'], function () {
     Route::get('/{video}', [VideoController::class, 'show'])->name('videos.show');
 });
 
-Route::group(['prefix' => 'payments', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'payments', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
     Route::get('/create', [PaymentController::class, 'create'])->name('payments.create');
     Route::post('/store', [PaymentController::class, 'store'])->name('payments.store');
@@ -110,7 +111,7 @@ Route::group(['prefix' => 'payments', 'middleware' => 'auth'], function () {
     Route::get('/{payment}', [PaymentController::class, 'show'])->name('payments.show');
 });
 
-Route::group(['prefix' => 'orders', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'orders', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/store', [OrderController::class, 'store'])->name('orders.store');
@@ -120,7 +121,7 @@ Route::group(['prefix' => 'orders', 'middleware' => 'auth'], function () {
     Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-Route::group(['prefix' => 'coupons', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'coupons', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [CouponController::class, 'index'])->name('coupons.index');
     Route::get('/create', [CouponController::class, 'create'])->name('coupons.create');
     Route::post('/store', [CouponController::class, 'store'])->name('coupons.store');
@@ -130,48 +131,50 @@ Route::group(['prefix' => 'coupons', 'middleware' => 'auth'], function () {
     Route::get('/{video}', [CouponController::class, 'show'])->name('coupons.show');
 });
 
-Route::get('test', function () {
-    $models = [
-        'Activity',
-        'Chapter',
-        'Course',
-        'Image',
-        'Lesson',
-        'Order',
-        'Payment',
-        'User',
-        'Video',
-    ];
+//Route::get('test', function () {
+//    $models = [
+//        'Activity',
+//        'Chapter',
+//        'Course',
+//        'Image',
+//        'Lesson',
+//        'Order',
+//        'Payment',
+//        'User',
+//        'Video',
+//    ];
+//
+//    $excluded_methods = [
+//        'factory',
+//        'newFactory',
+//
+//        // User model
+//        'tokens',
+//        'tokenCan',
+//        'createToken',
+//        'currentAccessToken',
+//        'withAccessToken',
+//        'notifications',
+//        'readNotifications',
+//        'unreadNotifications',
+//        'notify',
+//        'notifyNow',
+//        'routeNotificationFor'
+//    ];
+//
+//    foreach ($models as $model) {
+//        echo "<h2>$model</h2>";
+//
+//        foreach ((new ReflectionClass("\App\Models\\$model"))->getMethods() as $method) {
+//            $is_non_vendor = strpos($method->class, 'App\Models') !== false;
+//            $is_not_excluded = !in_array($method->name, $excluded_methods);
+//
+//            if ($is_non_vendor && $is_not_excluded) {
+//                echo '$' . strtolower($model) . '->' . $method->name . '();<br>';
+//            }
+//        }
+//    }
+//});
 
-    $excluded_methods = [
-        'factory',
-        'newFactory',
 
-        // User model
-        'tokens',
-        'tokenCan',
-        'createToken',
-        'currentAccessToken',
-        'withAccessToken',
-        'notifications',
-        'readNotifications',
-        'unreadNotifications',
-        'notify',
-        'notifyNow',
-        'routeNotificationFor'
-    ];
-
-    foreach ($models as $model) {
-        echo "<h2>$model</h2>";
-
-        foreach ((new ReflectionClass("\App\Models\\$model"))->getMethods() as $method) {
-            $is_non_vendor = strpos($method->class, 'App\Models') !== false;
-            $is_not_excluded = !in_array($method->name, $excluded_methods);
-
-            if ($is_non_vendor && $is_not_excluded) {
-                echo '$' . strtolower($model) . '->' . $method->name . '();<br>';
-            }
-        }
-    }
-});
 require __DIR__ . '/auth.php';

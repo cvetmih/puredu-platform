@@ -13,7 +13,9 @@
 </head>
 <body class="font-sans antialiased min-h-screen bg-gray-900 text-white flex">
 
-@include('layouts.navigation')
+@auth
+    @include('layouts.navigation')
+@endauth
 
 <main class="flex-1 overflow-auto h-screen py-8">
     {{ $slot }}

@@ -29,22 +29,6 @@ error_reporting(E_ALL);
 |
 */
 
-Route::get('/aaa', function () {
-//    $courses = Course::all();
-//    foreach ($courses as $course) {
-//        $key = 1;
-//        $lessons = Lesson::where('course_id', $course->id)->orderBy('id', 'ASC')->get();
-//
-//        foreach ($lessons as $lesson) {
-//            $lesson->number = $key;
-//            $lesson->save();
-//            $key++;
-//        }
-//    }
-//
-//    dd('a');
-});
-
 Route::get('/', function () {
     $total_revenue = Order::where('status', '=', 'paid')->sum('price');
     $users_this_month = User::where('created_at', '>', now()->subMonth())->count();
@@ -57,7 +41,7 @@ Route::get('/', function () {
         'orders_this_month' => $orders_this_month,
         'latest_orders' => $latest_orders
     ]);
-})->middleware(['auth', 'can:edit courses'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::group(['prefix' => 'users', 'middleware' => ['auth', 'can:edit courses']], function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');

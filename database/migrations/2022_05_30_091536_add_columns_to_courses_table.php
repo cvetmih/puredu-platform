@@ -22,10 +22,10 @@ class AddColumnsToCoursesTable extends Migration
             $table->string('intro_title');
             $table->text('intro_body');
             $table->string('trailer_image');
-            $table->string('trailer_video');
+            $table->string('trailer_video')->nullable();
             $table->json('timeline');
-            $table->json('coach_images');
-            $table->json('coach_body');
+            $table->json('coach_images')->nullable();
+            $table->json('coach_body')->nullable();
         });
     }
 

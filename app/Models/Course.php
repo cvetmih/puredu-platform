@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Course extends Model
 {
@@ -25,7 +26,9 @@ class Course extends Model
     protected $appends = [
         'first_lesson',
         'first_chapter',
-        'lesson_count'
+        'lesson_count',
+        'is_presale',
+        'launching_days'
     ];
 
     public function users()
@@ -56,23 +59,52 @@ class Course extends Model
     public function getImageUrlAttribute($value)
     {
         return asset('img/placeholder.jpg');
-        return isset($this->image_id) && isset($this->image) ? $this->image->url : asset('img/placeholder.jpg');
+
+//        if (isset($this->image_id) && isset($this->image)) {
+//            return $this->image->url;
+//        }
+//
+//        return asset('img/placeholder.jpg');
     }
 
     public function getFirstLessonAttribute()
     {
-        $first_lesson = Lesson::where('course_id', $this->id)->first();
-        return $first_lesson->slug;
+        $first_lesson = Lesson::where('course_id', $this->id);
+
+        if (!$first_lesson->exists()) {
+            return null;
+        }
+
+        return $first_lesson->first()->slug;
     }
 
     public function getFirstChapterAttribute()
     {
-        $first_lesson = Lesson::where('course_id', $this->id)->first();
-        return $first_lesson->chapter_id;
+        $first_lesson = Lesson::where('course_id', $this->id);
+
+        if (!$first_lesson->exists()) {
+            return null;
+        }
+
+        return $first_lesson->first()->chapter_id;
     }
 
     public function getLessonCountAttribute()
     {
         return $this->lessons()->count();
+    }
+
+    public function getIsPresaleAttribute()
+    {
+        $available_at = new Carbon($this->available_at);
+        $now = Carbon::now();
+        return $available_at->diff($now)->days > 0;
+    }
+
+    public function getLaunchingDaysAttribute()
+    {
+        $available_at = new Carbon($this->available_at);
+        $now = Carbon::now();
+        return $available_at->diff($now)->days;
     }
 }

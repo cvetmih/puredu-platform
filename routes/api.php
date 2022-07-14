@@ -6,6 +6,7 @@ use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\Progress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -117,11 +118,11 @@ Route::middleware('auth:sanctum')->post('/user/update', function (Request $reque
 
 // COURSES
 Route::get('/courses', function () {
-    return Course::whereIsActive(true)->get();
+    return Course::whereIsActive(true)->where('available_at', '<=', Carbon::now())->get();
 });
 
 Route::get('/courses/{course}', function ($course) {
-    return Course::where('slug', $course)->firstOrFail();
+    return Course::where('slug', $course)->whereIsActive(true)->firstOrFail();
 });
 
 // BUNDLES
@@ -130,7 +131,7 @@ Route::get('/bundles', function () {
 });
 
 Route::get('/bundles/{bundle}', function ($bundle) {
-    return Bundle::where('slug', $bundle)->firstOrFail();
+    return Bundle::where('slug', $bundle)->with('courses')->firstOrFail();
 });
 
 // CHAPTERS

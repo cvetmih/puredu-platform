@@ -15,7 +15,7 @@ function svg($path)
 
 function format_money($value, $prefix = '$', $suffix = '')
 {
-    return $prefix . number_format($value, 2) . $suffix;
+    return $prefix . number_format($value, 0) . $suffix;
 }
 
 function recalculate_progress(User $user, Course $course)

@@ -16,9 +16,9 @@
                 @endphp
                 <a href="{{ route('courses.show', $course) }}"
                    class="flex gap-10 flex-col justify-between min-h-64 bg-gradient-to-br {{ $colors[$key % count($colors)] }} p-6 rounded-xl transform hover:-translate-y-1.5 transition-transform">
-{{--                                    <div>{{ $course->excerpt }}</div>--}}
-{{--                                    <div>{{ $course->users->count() }}</div>--}}
-{{--                                    <div>{{ $course->created_at }}</div>--}}
+                    {{--                                    <div>{{ $course->excerpt }}</div>--}}
+                    {{--                                    <div>{{ $course->users->count() }}</div>--}}
+                    {{--                                    <div>{{ $course->created_at }}</div>--}}
                     <img src="{{ $course->image_url }}" alt="" class="rounded-md w-full">
 
                     <div class="text-md font-bold">{{ $course->title }}</div>

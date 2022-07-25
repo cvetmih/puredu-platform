@@ -28,7 +28,9 @@ class Course extends Model
         'first_chapter',
         'lesson_count',
         'is_presale',
-        'launching_days'
+        'launching_days',
+        'final_price',
+        'final_price_formatted',
     ];
 
     public function users()
@@ -112,5 +114,25 @@ class Course extends Model
 
         $now = Carbon::now();
         return $available_at->diff($now)->days;
+    }
+
+    public function getPriceFormattedAttribute()
+    {
+        return format_money($this->price);
+    }
+
+    public function getSaleFormattedAttribute()
+    {
+        return format_money($this->sale);
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        return $this->price - $this->sale;
+    }
+
+    public function getFinalPriceFormattedAttribute()
+    {
+        return format_money($this->final_price);
     }
 }

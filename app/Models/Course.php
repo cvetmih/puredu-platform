@@ -97,6 +97,9 @@ class Course extends Model
     public function getIsPresaleAttribute()
     {
         $available_at = new Carbon($this->available_at);
+
+        if($available_at->isPast()) return false;
+
         $now = Carbon::now();
         return $available_at->diff($now)->days > 0;
     }
@@ -104,6 +107,9 @@ class Course extends Model
     public function getLaunchingDaysAttribute()
     {
         $available_at = new Carbon($this->available_at);
+
+        if ($available_at->isPast()) return 0;
+
         $now = Carbon::now();
         return $available_at->diff($now)->days;
     }

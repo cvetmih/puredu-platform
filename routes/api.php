@@ -118,7 +118,10 @@ Route::middleware('auth:sanctum')->post('/user/update', function (Request $reque
 
 // COURSES
 Route::get('/courses', function () {
-    return Course::whereIsActive(true)->where('available_at', '<=', Carbon::now())->get();
+    return Course::where([
+        ['is_active', '=', true],
+        ['available_at', '<=', Carbon::now()]
+    ])->get();
 });
 
 Route::get('/courses/{course}', function ($course) {

@@ -100,7 +100,7 @@ class Course extends Model
     {
         $available_at = new Carbon($this->available_at);
 
-        if($available_at->isPast()) return false;
+        if ($available_at->isPast()) return false;
 
         $now = Carbon::now();
         return $available_at->diff($now)->days > 0;

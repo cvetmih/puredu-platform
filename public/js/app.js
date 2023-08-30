@@ -10,11 +10,10 @@
 // require('./bootstrap');
 //
 // require('alpinejs');
+
 // Notifications
 var handleNotify = function handleNotify() {};
-
 window.addEventListener('load', handleNotify);
-
 String.prototype.slugify = function () {
   var separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "-";
   return this.toString().normalize('NFD') // split an accented letter in the base letter and the acent
@@ -22,9 +21,7 @@ String.prototype.slugify = function () {
   .toLowerCase().replace(/[^a-z0-9 -]/g, '') // remove all chars not letters, numbers and spaces (to be replaced)
   .trim().replace(/\s+/g, separator);
 };
-
 var tabItems = document.querySelectorAll('[data-tabs]');
-
 var handleTabsNavClick = function handleTabsNavClick(e) {
   e.preventDefault();
   var targetTab = e.target.getAttribute('data-tabs-nav');
@@ -46,7 +43,6 @@ var handleTabsNavClick = function handleTabsNavClick(e) {
     }
   });
 };
-
 tabItems.forEach(function (item) {
   var nav = item.querySelectorAll('[data-tabs-nav]');
   nav.forEach(function (navItem) {
@@ -191,7 +187,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}

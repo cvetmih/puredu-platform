@@ -26,5 +26,7 @@
                 </a>
             @endforeach
         </x-box>
+
+        {{ $orders->links() }}
     </x-container>
 </x-app-layout>

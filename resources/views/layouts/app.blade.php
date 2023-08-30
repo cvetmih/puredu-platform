@@ -27,10 +27,9 @@
     @endphp
 @endif
 
-<x-notify-messages/>
+{{--<x-notify-messages/>--}}
 
 <script src="{{ mix('js/app.js') }}" defer></script>
-@notifyJs
 @stack('scripts')
 </body>
 </html>

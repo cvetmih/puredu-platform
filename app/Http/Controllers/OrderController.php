@@ -77,7 +77,11 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('user', 'course')->latest()->get();
+        $orders = Order::with('user', 'course')
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
         return view('orders.index')->with(compact('orders'));
     }
 

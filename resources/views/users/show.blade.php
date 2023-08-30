@@ -34,8 +34,13 @@
             <x-box data-tab="details" class="active">
                 <header class="mb-4 flex items-start justify-between">
                     <h2 class="text-2xl font-bold">User profile</h2>
-                    <a href="{{ route('users.edit', $user) }}"
-                       class="inline-flex bg-gradient-to-br from-green-400 to-blue-400 py-3 px-6 rounded-full font-bold">Edit</a>
+                    <x-button href="{{ route('users.edit', $user) }}"
+                              theme="secondary"
+                              class="rounded-full"
+                              size="big"
+                    >
+                        Edit
+                    </x-button>
                 </header>
 
                 <div class="flex flex-col gap-4">
@@ -59,6 +64,17 @@
                         <div class="flex-1">
                             <p class="text-lg font-bold">Last login</p>
                             <p class="">{{ $user->created_at->format('M d, Y') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="text-lg font-bold">Total spent</p>
+                            <p class="">${{ $total_spent }}</p>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg font-bold">Last order at</p>
+                            <p class="">{{ $last_order_at ? $last_order_at->format('M d, Y') : '-' }}</p>
                         </div>
                     </div>
 
@@ -118,23 +134,25 @@
                 </header>
 
                 <x-box>
-                    @foreach($user->activities as $key => $activity)
+                    @foreach($trackers as $key => $tracker)
                         <div
-                            class="px-6 py-4 flex gap-4 justify-between bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== $user->activities->count()) border-b border-gray-800 @endif">
-                            <div>{{ $activity->course->title }}</div>
-                            <div class="inline-flex items-center gap-2">
-                                <div class="w-4">
-                                    <x-icon icon="{{ $activity->lesson->icon }}"/>
-                                </div>
-                                {{ $activity->lesson->title }}
-                            </div>
+                            class="px-6 py-4 flex flex-col gap-4 bg-gradient-to-br hover:from-primary hover:to-secondary @if($key + 1 !== $user->trackers->count()) border-b border-gray-800 @endif">
+                            {{--                            <div>{{ $tracker->action }}</div>--}}
+                            {{--                            <div class="inline-flex items-center gap-2">--}}
+                            {{--                                <div class="w-4">--}}
+                            {{--                                    <x-icon icon="{{ $activity->lesson->icon }}"/>--}}
+                            {{--                                </div>--}}
+                            {{--                                {{ $activity->lesson->title }}--}}
+                            {{--                            </div>--}}
                             <div>
-                                <x-tag status="{{ $activity->type }}"/>
+                                <x-tag status="{{ $tracker->action }}"/>
                             </div>
-                            <div>{{ $activity->created_at }}</div>
+                            <div>{{ json_encode($tracker->body) }}</div>
                         </div>
                     @endforeach
                 </x-box>
+
+                {{ $trackers->links() }}
             </x-box>
 
             <x-box data-tab="feedback">

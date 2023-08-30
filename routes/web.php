@@ -1,17 +1,14 @@
 <?php
 
+use App\Http\Controllers\BundleController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
-use App\Models\Course;
-use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 ini_set('display_errors', 1);
@@ -30,20 +27,24 @@ error_reporting(E_ALL);
 */
 
 Route::get('/', function () {
-    $total_revenue = Order::where('status', '=', 'paid')->sum('price');
+    $total_revenue = Order::where('status', '=', 'success')->sum('price');
+    $this_month_revenue = Order::where('status', '=', 'success')->where('created_at', '>', now()->subMonth())->sum('price');
+    $total_users = User::all()->count();
     $users_this_month = User::where('created_at', '>', now()->subMonth())->count();
-    $orders_this_month = Order::where('created_at', '>', now()->subMonth())->count();
-    $latest_orders = Order::with(['user', 'course'])->latest()->limit(5)->get();
+    $orders_this_month = Order::where('created_at', '>', now()->subMonth())->where('status', '=', 'success')->count();
+    $latest_orders = Order::with(['user', 'course'])->where('status', '=', 'success')->latest()->limit(5)->get();
 
     return view('dashboard')->with([
         'total_revenue' => '$' . $total_revenue,
+        'this_month_revenue' => '$' . $this_month_revenue,
         'users_this_month' => $users_this_month,
+        'total_users' => $total_users,
         'orders_this_month' => $orders_this_month,
         'latest_orders' => $latest_orders
     ]);
 })->middleware(['auth'])->name('dashboard');
 
-Route::group(['prefix' => 'users', 'middleware' => ['auth', 'can:edit courses']], function () {
+Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::get('/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
@@ -54,7 +55,7 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth', 'can:edit courses']]
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
 });
 
-Route::group(['prefix' => 'courses', 'middleware' => ['auth', 'can:edit courses']], function () {
+Route::group(['prefix' => 'courses', 'middleware' => ['auth']], function () {
     Route::get('/', [CourseController::class, 'index'])->name('courses.index');
     Route::get('/create', [CourseController::class, 'create'])->name('courses.create');
     Route::post('/store', [CourseController::class, 'store'])->name('courses.store');
@@ -64,7 +65,17 @@ Route::group(['prefix' => 'courses', 'middleware' => ['auth', 'can:edit courses'
     Route::get('/{course}', [CourseController::class, 'show'])->name('courses.show');
 });
 
-Route::group(['prefix' => 'lessons', 'middleware' => ['auth', 'can:edit courses']], function () {
+Route::group(['prefix' => 'bundles', 'middleware' => ['auth']], function () {
+    Route::get('/', [BundleController::class, 'index'])->name('bundles.index');
+    Route::get('/create', [BundleController::class, 'create'])->name('bundles.create');
+    Route::post('/store', [BundleController::class, 'store'])->name('bundles.store');
+    Route::get('/{bundle}/edit', [BundleController::class, 'edit'])->name('bundles.edit');
+    Route::put('/{bundle}/update', [BundleController::class, 'update'])->name('bundles.update');
+    Route::delete('/{bundle}/destroy', [BundleController::class, 'destroy'])->name('bundles.destroy');
+    Route::get('/{bundle}', [BundleController::class, 'show'])->name('bundles.show');
+});
+
+Route::group(['prefix' => 'lessons', 'middleware' => ['auth']], function () {
     Route::get('/', [LessonController::class, 'index'])->name('lessons.index');
 //    Route::get('/create', [LessonController::class, 'create'])->name('lessons.create');
     Route::get('/create/{type}', [LessonController::class, 'create'])->name('lessons.create');
@@ -75,7 +86,7 @@ Route::group(['prefix' => 'lessons', 'middleware' => ['auth', 'can:edit courses'
     Route::get('/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
 });
 
-Route::group(['prefix' => 'videos', 'middleware' => ['auth', 'can:edit courses']], function () {
+Route::group(['prefix' => 'videos', 'middleware' => ['auth']], function () {
     Route::get('/', [VideoController::class, 'index'])->name('videos.index');
     Route::get('/create', [VideoController::class, 'create'])->name('videos.create');
     Route::post('/store', [VideoController::class, 'store'])->name('videos.store');
@@ -85,17 +96,7 @@ Route::group(['prefix' => 'videos', 'middleware' => ['auth', 'can:edit courses']
     Route::get('/{video}', [VideoController::class, 'show'])->name('videos.show');
 });
 
-Route::group(['prefix' => 'payments', 'middleware' => ['auth', 'can:edit courses']], function () {
-    Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
-    Route::get('/create', [PaymentController::class, 'create'])->name('payments.create');
-    Route::post('/store', [PaymentController::class, 'store'])->name('payments.store');
-    Route::get('/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
-    Route::put('/{payment}/update', [PaymentController::class, 'update'])->name('payments.update');
-    Route::delete('/{payment}/destroy', [PaymentController::class, 'destroy'])->name('payments.destroy');
-    Route::get('/{payment}', [PaymentController::class, 'show'])->name('payments.show');
-});
-
-Route::group(['prefix' => 'orders', 'middleware' => ['auth', 'can:edit courses']], function () {
+Route::group(['prefix' => 'orders', 'middleware' => ['auth']], function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/store', [OrderController::class, 'store'])->name('orders.store');
@@ -105,7 +106,7 @@ Route::group(['prefix' => 'orders', 'middleware' => ['auth', 'can:edit courses']
     Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-Route::group(['prefix' => 'coupons', 'middleware' => ['auth', 'can:edit courses']], function () {
+Route::group(['prefix' => 'coupons', 'middleware' => ['auth']], function () {
     Route::get('/', [CouponController::class, 'index'])->name('coupons.index');
     Route::get('/create', [CouponController::class, 'create'])->name('coupons.create');
     Route::post('/store', [CouponController::class, 'store'])->name('coupons.store');
@@ -123,7 +124,6 @@ Route::group(['prefix' => 'coupons', 'middleware' => ['auth', 'can:edit courses'
 //        'Image',
 //        'Lesson',
 //        'Order',
-//        'Payment',
 //        'User',
 //        'Video',
 //    ];

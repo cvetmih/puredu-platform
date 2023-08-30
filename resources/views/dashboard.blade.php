@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-container>
-        <div class="flex gap-4">
-            <div class=" flex flex-col gap-4">
-                <x-box class="flex flex-col gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+                <x-box class="flex flex-col gap-4 flex-1">
                     <x-box class="bg-white bg-opacity-5 flex gap-8 justify-between">
                         <div>
-                            <p class="mb-4 text-sm text-gray-200">Total revenue</p>
-                            <p class="text-4xl font-bold">{{ $total_revenue }}</p>
+                            <p class="mb-4 text-sm text-gray-200">Monthly revenue</p>
+                            <p class="text-4xl font-bold">{{ $this_month_revenue }}</p>
                         </div>
                         <svg width="151" height="78" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect y="9" width="16" height="68.5" rx="8" fill="url(#a)" fill-opacity=".1"/>
@@ -172,69 +172,58 @@
                         </svg>
                     </x-box>
                 </x-box>
+            </div>
 
-                <x-box-with-header header="Orders">
+            <div>
+                <x-box-with-header class="flex-1" header="Orders">
                     <div class="px-6">
                         @foreach($latest_orders as $order)
-                            <div class=" border-b border-gray-800 py-2">
+                            <div class="border-b border-gray-800 py-2">
                                 <a href="{{ route('orders.show', $order) }}"
-                                   class="flex items-center justify-between px-4 border-l-2 border-primary hover:translate-x-1.5 transform transition-transform">
-                                    <div>
-                                        <div class="mb-1">{{ $order->course->title }}</div>
-                                        <div class="text-sm text-gray-400">{{ $order->user->name }}</div>
+                                   class="flex flex-col px-4 border-l-2 border-primary hover:translate-x-1.5 transform transition-transform"
+                                >
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="mb-1">
+                                                {{ $order->course ? $order->course->title : $order->bundle->title }}
+                                            </div>
+                                            <div class="text-sm text-gray-400">{{ $order->user->name }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-lg text-right">
+                                                ${{ $order->price }}
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                {{ $order->created_at->diffForHumans() }}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="text-lg">${{ $order->price }}</div>
                                 </a>
                             </div>
                         @endforeach
+
+                        <div class="text-center">
+                            <a href="{{ route('orders.index') }}"
+                               class="py-2 px-4 inline-flex"
+                            >
+                                See All
+                            </a>
+                        </div>
                     </div>
                 </x-box-with-header>
             </div>
 
-            <div class="flex-1 flex flex-col gap-4">
-                <x-box-with-header header="V dashboardu chci videt">
+            <div>
+                <x-box-with-header class="flex-1" header="Quick Stats">
                     <ul class="">
                         <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                            Pocet novych uzivatelu za mesic
+                            Total revenue: {{ $total_revenue }}
                         </li>
                         <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                            Pocet novych enrollmentu za mesic
-                        </li>
-                        <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                            Vydelek za posledni mesic
+                            Total users: {{ $total_users }}
                         </li>
                     </ul>
                 </x-box-with-header>
-
-                <div class="flex gap-4">
-                    <x-box-with-header class="flex-1" header="Quick links">
-                        <ul class="">
-                            <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Create new coupon
-                            </li>
-                            <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Pocet novych enrollmentu za mesic
-                            </li>
-                            <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Vydelek za posledni mesic
-                            </li>
-                        </ul>
-                    </x-box-with-header>
-                    <x-box-with-header class="flex-1" header="V dashboardu chci videt">
-                        <ul class="">
-                            <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Pocet novych uzivatelu za mesic
-                            </li>
-                            <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Pocet novych enrollmentu za mesic
-                            </li>
-                            <li class="bg-gradient-to-br hover:from-primary hover:to-secondary px-6 py-4">
-                                Vydelek za posledni mesic
-                            </li>
-                        </ul>
-                    </x-box-with-header>
-                </div>
-
             </div>
         </div>
     </x-container>

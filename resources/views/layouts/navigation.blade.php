@@ -6,7 +6,6 @@
         'lessons.index' => 'Lessons',
         'videos.index' => 'Videos',
         'orders.index' => 'Orders',
-        'payments.index' => 'Payments',
         'coupons.index' => 'Coupons',
     ];
 @endphp

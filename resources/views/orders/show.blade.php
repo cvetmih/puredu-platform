@@ -15,8 +15,13 @@
         <x-box>
             <b>User:</b> <a href="{{ route('users.show', $order->user) }}"
                             class="underline hover:no-underline">{{ $order->user->name }}</a><br>
+            @if($order->course)
             <b>Course:</b> <a href="{{ route('courses.show', $order->course) }}"
                               class="underline hover:no-underline">{{ $order->course->title }}</a><br>
+            @elseif($order->bundle)
+                <b>Bundle:</b> <a href="{{ route('bundles.show', $order->bundle) }}"
+                                  class="underline hover:no-underline">{{ $order->bundle->title }}</a><br>
+            @endif
             <b>Price:</b> {{ format_money($order->price) }}<br>
             <b>Method:</b> {{ $order->method }}<br>
             <b>Referrer:</b> {{ $order->referrer }}<br>

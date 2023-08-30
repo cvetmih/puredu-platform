@@ -30,4 +30,9 @@ class Order extends Model
     {
         return $this->belongsTo(Bundle::class);
     }
+
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class);
+    }
 }

@@ -5,16 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class Tracker extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'action',
+        'body'
+    ];
 
-    public function order()
-    {
-        return $this->belongsTo(Order::class);
-    }
+    protected $casts = [
+        'body' => 'json'
+    ];
 
     public function user()
     {

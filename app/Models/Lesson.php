@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class Lesson extends Model
 {
@@ -25,17 +27,18 @@ class Lesson extends Model
         'is_free' => 'boolean',
         'is_downloadable' => 'boolean',
         'is_autoplay' => 'boolean',
-        'questions' => 'json'
+        'questions' => 'json',
+        'data' => 'json'
     ];
 
-    protected $with = [
-//        'video',
-//        'chapter'
-    ];
+    //    protected $with = [
+    //        'video',
+    //        'chapter'
+    //    ];
 
     protected $appends = [
-        'next_lesson',
-        'previous_lesson',
+        //        'next_lesson',
+        //        'previous_lesson',
     ];
 
     public function course()
@@ -43,66 +46,140 @@ class Lesson extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function chapter()
+    public function courses()
     {
-        return $this->belongsTo(Chapter::class);
+        return $this->belongsToMany(Course::class)
+            ->using(CourseLesson::class)
+            ->withPivot('chapter_id');
+//        return $this->belongsToMany(Course::class, 'course_lesson');
     }
 
-    public function image()
+    public function chapters()
     {
-        return $this->belongsTo(Image::class);
+        return $this->belongsToMany(Chapter::class);
     }
 
-    public function video()
+    public function users()
     {
-        return $this->belongsTo(Video::class);
-    }
-
-    public function activities()
-    {
-        return $this->belongsToMany(Activity::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function getIconAttribute()
     {
-        return $this->type;
-    }
+        $resolved_types = [
+            'audio' => 'audio',
+            'certificate' => 'certificate',
+            'download' => 'download',
+            'file' => 'download',
+            'json' => 'text',
+            'letters' => 'text',
+            'text' => 'text',
+            'multimedia' => 'download',
+            'quiz' => 'survey',
+            'survey' => 'survey',
+            'video' => 'video',
+            'youtube' => 'video',
+        ];
 
-    public function getPreviousLessonAttribute()
-    {
-        $prev = Lesson::where([
-            ['course_id', '=', $this->course_id],
-            ['id', '<', $this->id]
-        ])->orderBy('id', 'DESC');
-
-        if ($prev->exists()) {
-            $prev = $prev->first();
-            return [
-                'chapter_id' => $prev->chapter_id,
-                'slug' => $prev->slug,
-                'title' => $prev->title
-            ];
+        if (!isset($resolved_types[$this->type])) {
+            return svg('icons/lesson-type/text.svg');
         }
 
-        return null;
+
+        return svg('icons/lesson-type/' . $resolved_types[$this->type] . '.svg');
     }
 
-    public function getNextLessonAttribute()
+    public function getTypeForHumansAttribute()
     {
-        $next = Lesson::where([
-            ['course_id', '=', $this->course_id],
-            ['id', '>', $this->id]
-        ])->orderBy('id');
+        switch ($this->type) {
+            case 'audio':
+                return 'Audio';
+            case 'certificate':
+                return 'Certificate';
+            case 'download':
+            case 'file':
+                return 'Assets';
+            case 'json':
+            case 'letters':
+            case 'text':
+                return 'Text';
+            case 'multimedia':
+                return 'Multimedia';
+            case 'quiz':
+                return 'Quiz';
+            case 'survey':
+                return 'Survey';
+            case 'video':
+                return 'Video';
+            default:
+                return 'Unknown';
+        }
+    }
 
-        if ($next->exists()) {
-            $next = $next->first();
-            return [
-                'chapter_id' => $next->chapter_id,
-                'slug' => $next->slug,
-                'title' => $next->title
-            ];
+    public function previous_lesson($course_id)
+    {
+        $order = DB::table('course_lesson')
+            ->where('course_id', $course_id)
+            ->where('lesson_id', $this->id)
+            ->first()
+            ->order;
+
+        return DB::table('course_lesson')
+            ->join('lessons', 'lessons.id', '=', 'course_lesson.lesson_id')
+            ->select('lessons.*')
+            ->where('course_id', $course_id)
+            ->where('order', '<', $order)
+            ->orderBy('order', 'desc')
+            ->first();
+    }
+
+    public function next_lesson($course_id)
+    {
+        $order = DB::table('course_lesson')
+            ->where('course_id', $course_id)
+            ->where('lesson_id', $this->id)
+            ->first()
+            ->order;
+
+        return DB::table('course_lesson')
+            ->join('lessons', 'lessons.id', '=', 'course_lesson.lesson_id')
+            ->select('lessons.*')
+            ->where('course_id', $course_id)
+            ->where('order', '>', $order)
+            ->orderBy('order')
+            ->first();
+    }
+
+    private function getSubtitlesPath()
+    {
+        $path = str_replace('.mp4', '.vtt', $this->file_url);
+
+        if (File::exists('subtitles/' . $path)) {
+            return asset('subtitles/' . $path);
         }
 
-        return null;
+        return false;
+    }
+
+    public function getSubtitlesAttribute()
+    {
+        if ($this->type !== 'video') return false;
+
+        return $this->getSubtitlesPath();
+    }
+
+    public function getLengthFormattedAttribute()
+    {
+        if (!$this->length) return '';
+        $minutes = floor($this->length / 60);
+        $seconds = $this->length % 60;
+
+        return sprintf("%02d:%02d", $minutes, $seconds);
+    }
+
+    public function getChapterFromCourse($course_id)
+    {
+        $chapter_id = $this->courses()->where('courses.id', $course_id)->first()->pivot->chapter_id;
+        return Chapter::find($chapter_id);
     }
 }

@@ -20,7 +20,7 @@ class LessonController extends Controller
     {
         $courses = Course::all()->pluck('title', 'id');
         $chapters = Chapter::all()->pluck('title', 'id');
-        $videos = Video::all()->pluck('title', 'id');
+//        $videos = Video::all()->pluck('title', 'id');
         $lesson_types = (new Lesson())->types;
 
         $all_types = array_keys($lesson_types);
@@ -68,15 +68,15 @@ class LessonController extends Controller
                 'show_in' => ['create', 'edit'],
                 'hidden' => false,
             ],
-            'video_id' => [
-                'label' => 'Video',
-                'type' => 'select',
-                'required' => true,
-                'options' => $videos,
-                'for_types' => ['video'],
-                'show_in' => ['create', 'edit'],
-                'hidden' => false,
-            ],
+//            'video_id' => [
+//                'label' => 'Video',
+//                'type' => 'select',
+//                'required' => true,
+//                'options' => $videos,
+//                'for_types' => ['video'],
+//                'show_in' => ['create', 'edit'],
+//                'hidden' => false,
+//            ],
             'course_id' => [
                 'label' => 'Course',
                 'type' => 'select',

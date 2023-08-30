@@ -9,10 +9,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 
 class UserController extends Controller
@@ -48,9 +45,28 @@ class UserController extends Controller
     /**
      * @return Application|Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['orders', 'courses'])->where('id', '!=', Auth::id())->get();
+//        $users = User::with(['courses'])
+//            ->where('id', '!=', Auth::id())
+//            ->orderBy('id', 'desc')
+//            ->paginate(25);
+
+        $query = $request->get('search');
+
+        $users = User::query();
+
+        if ($query) {
+            $users->where('name', 'LIKE', '%' . $query . '%')
+                ->orWhere('email', 'LIKE', '%' . $query . '%')
+                ->orWhere('id', 'LIKE', '%' . $query . '%');
+        }
+
+        $users = $users->with('courses')
+            ->paginate(25)
+            ->withQueryString();
+
+
         return view('users.index')->with(compact('users'));
     }
 
@@ -85,12 +101,16 @@ class UserController extends Controller
     public function show(User $user)
     {
         $courses = Course::all()->pluck('title', 'id');
-        return view('users.show')->with(compact('user', 'courses'));
+        $total_spent = $user->orders()->where('status', '=', 'success')->sum('price');
+        $last_order_at = $user->orders->last() ? $user->orders->last()->created_at : null;
+        $trackers = $user->trackers()->paginate(25)->withQueryString();
+
+        return view('users.show')->with(compact('user', 'courses', 'total_spent', 'last_order_at', 'trackers'));
     }
 
     public function edit(User $user)
     {
-        return view('users.edit')->with([
+        return view('users . edit')->with([
             'user' => $user,
             'inputs' => $this->inputs
         ]);
